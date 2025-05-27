@@ -5,6 +5,17 @@
 #include <cstdlib>
 #endif
 
+void mainTiTle(){
+    std::string title = "쇼핑몰";
+    std::string line(title.size() + 4, '-');
+    std::cout << "\033[1;34m"; // 파란색 시작
+    std::cout << "┌" << line << "┐" << std::endl;
+    std::cout << "│    " << title << "   │" << std::endl;
+    std::cout << "└" << line << "┘" << std::endl;
+    std::cout << "\033[0m"; // 색상 리셋
+    
+}
+
 // 화면 지우기
 void clearScreen() {
     #ifdef _WIN32
@@ -16,6 +27,7 @@ void clearScreen() {
 
 void displayMainMenu() {
     clearScreen();
+    mainTiTle();
     std::cout << "=== 메인 메뉴 ===" << std::endl;
     std::cout << "1. 첫 번째 메뉴" << std::endl;
     std::cout << "2. 두 번째 메뉴" << std::endl;
@@ -58,6 +70,8 @@ void displaySelectedMenu(int mainChoice, int subChoice, int subSubChoice) {
 
 int main() {
     int mainChoice, subChoice, subSubChoice;
+
+    
 
     while(true) {
         displayMainMenu();
