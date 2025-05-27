@@ -12,8 +12,7 @@ void mainTiTle(){
     std::cout << "┌" << line << "┐" << std::endl;
     std::cout << "│    " << title << "   │" << std::endl;
     std::cout << "└" << line << "┘" << std::endl;
-    std::cout << "\033[0m"; // 색상 리셋
-    
+    std::cout << "\033[0m"; // 색상 리셋   
 }
 
 // 화면 지우기
