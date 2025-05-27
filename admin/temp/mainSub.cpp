@@ -8,9 +8,6 @@
 
 using namespace std;
 
-// 제품 클래스
-#include "product.cpp"
-
 
 void mainTiTle(){
     string title = "KOSA 편의점";
