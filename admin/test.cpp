@@ -1,13 +1,12 @@
 #include <iostream>
-
-#include "makeCSVProduct.cpp"
-
+#include "../csv/csvManager.cpp"
 
 int main(){
     std::cout << "My Test" << std::endl;
 
-    ProductManager pm;
-    pm.checkFile();
+    CsvManager csvManager;
+    csvManager.checkDirectory("test");
+    csvManager.checkFile("test/test.csv");
 
     return 0;
 }
