@@ -53,7 +53,6 @@ void displayMainMenu() {
     }
 }
 
-
 int main(){
     displayMainMenu();
     return 0;
