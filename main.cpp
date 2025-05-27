@@ -6,7 +6,7 @@
 #endif
 
 void mainTiTle(){
-    std::string title = "쇼핑몰";
+    std::string title = "KOSA 편의점";
     std::string line(title.size() + 4, '-');
     std::cout << "\033[1;34m"; // 파란색 시작
     std::cout << "┌" << line << "┐" << std::endl;
@@ -69,8 +69,6 @@ void displaySelectedMenu(int mainChoice, int subChoice, int subSubChoice) {
 
 int main() {
     int mainChoice, subChoice, subSubChoice;
-
-    
 
     while(true) {
         displayMainMenu();
