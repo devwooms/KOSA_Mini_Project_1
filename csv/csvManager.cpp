@@ -13,11 +13,18 @@ using namespace std;
 using namespace filesystem;
 
 void CsvManager::checkDirectory(string folderPath){
-    if (!exists(folderPath)) {
-        create_directory(folderPath);
-        cout << "디렉토리가 생성되었습니다." << endl;
-    } else {
-        cout << "디렉토리가 이미 존재합니다." << endl;
+    try {
+        if (!exists(folderPath)) {
+            if (create_directory(folderPath)) {
+                cout << "디렉토리가 생성되었습니다: " << folderPath << endl;
+            } else {
+                cout << "디렉토리 생성 실패: " << folderPath << endl;
+            }
+        } else {
+            cout << "디렉토리가 이미 존재합니다: " << folderPath << endl;
+        }
+    } catch (const filesystem_error& e) {
+        cout << "오류 발생: " << e.what() << endl;
     }
 };
 void CsvManager::checkFile(string filename){

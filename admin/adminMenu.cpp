@@ -4,7 +4,7 @@
 #else
 #include <cstdlib>
 #endif
-#include "../product/product.cpp"
+#include "adminMenu.h"
 
 using namespace std;
 
@@ -96,7 +96,6 @@ void productManagement(){
             cout << "잘못된 선택입니다." << endl;
             break;
     }
-    
 }
 
 // --------------------------------- 결제 및 거래 처리 시스템 ---------------------------------
@@ -126,7 +125,6 @@ void paymentAndTransactionSystem(){
             cout << "잘못된 선택입니다." << endl;
             break;
     }
-    
 }
 
 // --------------------------------- 관리자 메뉴 ---------------------------------
