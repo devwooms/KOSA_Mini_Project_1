@@ -41,12 +41,11 @@ public:
     }
 
     void saveCSV(const T& obj) {
-        checkDirectory(obj.getFolderPath());
-        checkFile(obj.getFilename());
         string fullPath = obj.getFolderPath() + "/" + obj.getFilename();
+        checkDirectory(obj.getFolderPath());
         checkFile(fullPath);
         ofstream file(fullPath);
-        file << obj.toString();
+        file << obj.toCSV();
         file.close();
     }
 

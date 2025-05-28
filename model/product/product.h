@@ -18,13 +18,13 @@ private:
     string category;
     int price;
     string brand;
-    float rewardpoints;
-    float expirationDate;
+    int rewardpoints;
+    int expirationDate;
     int wholesalePrice;
 
 public:
     Product();
-    Product(int id, string n, string c, int p, string b, float r, float e, int w);
+    Product(int id, string n, string c, int p, string b, int r, int e, int w);
 
     // CSV 관련 getter
     string getFilename() const { return FILENAME; }
@@ -37,8 +37,8 @@ public:
     string getCategory() const;
     int getPrice() const;
     string getBrand() const;
-    float getrewardpoints() const;
-    float getExpirationDate() const;
+    int getrewardpoints() const;
+    int getExpirationDate() const;
     int getWholesalePrice() const;
     
     // set
@@ -47,13 +47,14 @@ public:
     void setCategory(const string& c);
     void setPrice(int p);
     void setBrand(const string& b);
-    void setrewardpoints(float s);
-    void setExpirationDate(float e);
+    void setrewardpoints(int s);
+    void setExpirationDate(int e);
     void setWholesalePrice(int w);
 
     // 제품 정보 출력
     void info() const;
     string toString() const;
+    string toCSV() const;
 };
 
 #endif

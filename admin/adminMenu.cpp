@@ -50,8 +50,8 @@ void productManagement(){
     string category;
     string brand;
     int price;
-    float rewardpoints;
-    float expirationDate;
+    int rewardpoints;
+    int expirationDate;
     int wholesalePrice;
     string item;
     Product newProduct;
