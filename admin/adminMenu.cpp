@@ -61,14 +61,23 @@ void productManagement(){
         case 1:
             break;
         case 2:
+            // newProduct = Product(
+            //     1231, 
+            //     "test", 
+            //     "test", 
+            //     1000, 
+            //     "test", 
+            //     100, 
+            //     100, 
+            //     1000);
             newProduct = Product(
-                1231, 
-                "test", 
-                "test", 
+                321321, 
+                "test2", 
+                "test2", 
                 1000, 
-                "test", 
-                0.1, 
-                0.1, 
+                "test2", 
+                100, 
+                100, 
                 1000);
             csvManager.saveCSV(newProduct);
             

@@ -35,6 +35,7 @@ void Product::setWholesalePrice(int w) { wholesalePrice = w; }
 // 제품 정보 출력
 void Product::info() const {
     cout << "\\n=== 제품 정보 ===" << endl;
+    // Primary Key
     cout << "1. 제품 번호: " << productId << endl;
     cout << "2. 이름: " << name << endl;
     cout << "3. 카테고리: " << category << endl;
@@ -45,6 +46,7 @@ void Product::info() const {
     cout << "8. 업체가격: " << wholesalePrice << "원" << endl;
 }
 
+// 제품 정보 출력 (string)
 string Product::toString() const {
     return "제품 번호: " + to_string(productId) + "\n" +
            "이름: " + name + "\n" +
@@ -56,6 +58,7 @@ string Product::toString() const {
            "업체가격: " + to_string(wholesalePrice) + "원\n";
 }
 
+// 제품 정보 출력 (CSV)
 string Product::toCSV() const {
     return to_string(productId) + "," 
     + name + "," 

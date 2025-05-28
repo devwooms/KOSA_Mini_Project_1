@@ -13,6 +13,7 @@ private:
     static const string FILENAME;
     static const string FOLDER_PATH;
     static const string KEYWORD;
+    // Primary Key
     int productId;
     string name;
     string category;
