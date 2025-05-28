@@ -5,7 +5,7 @@
 #include <cstdlib>
 #endif
 #include "adminMenu.h"
-#include "../controller/csvManager.h"
+#include "../model/csvRepository.h"
 #include "../model/product/product.h"
 
 using namespace std;
@@ -55,21 +55,12 @@ void productManagement(){
     int wholesalePrice;
     string item;
     Product newProduct;
-    CsvManager<Product> csvManager;
+    CsvRepository<Product> csvRepository;
 
     switch(adminChoice){
         case 1:
             break;
         case 2:
-            // newProduct = Product(
-            //     1231, 
-            //     "test", 
-            //     "test", 
-            //     1000, 
-            //     "test", 
-            //     100, 
-            //     100, 
-            //     1000);
             newProduct = Product(
                 321321, 
                 "test2", 
@@ -79,7 +70,7 @@ void productManagement(){
                 100, 
                 100, 
                 1000);
-            csvManager.saveCSV(newProduct);
+            csvRepository.saveCSV(newProduct);
             
             // cout << " === 제품 입력 === " << endl;
             // cout << "제품 번호: ";
