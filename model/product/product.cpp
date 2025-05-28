@@ -3,6 +3,11 @@
 
 using namespace std;
 
+// 정적 변수 초기화
+const string Product::FILENAME = "products.csv";
+const string Product::FOLDER_PATH = "./data/products";
+const string Product::KEYWORD = "products";
+
 Product::Product() : productId(0), name(""), category(""), price(0), brand(""), rewardpoints(0), expirationDate(0), wholesalePrice(0) {}
 Product::Product(int id, string n, string c, int p, string b, float r, float e, int w)
     : productId(id), name(n), category(c), price(p), brand(b), rewardpoints(r), expirationDate(e), wholesalePrice(w) {}
@@ -39,3 +44,15 @@ void Product::info() const {
     cout << "이벤트 할인: " << price * expirationDate << endl;
     cout << "업체가격: " << wholesalePrice << "원" << endl;
 }
+
+string Product::toString() const {
+    return "제품 번호: " + to_string(productId) + "\n" +
+           "이름: " + name + "\n" +
+           "카테고리: " + category + "\n" +
+           "가격: " + to_string(price) + "원\n" +
+           "브랜드: " + brand + "\n" +
+           "적립 포인트: " + to_string(price * rewardpoints) + "\n" +
+           "이벤트 할인: " + to_string(price * expirationDate) + "\n" +
+           "업체가격: " + to_string(wholesalePrice) + "원\n";
+}
+

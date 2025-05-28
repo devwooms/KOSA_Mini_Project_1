@@ -7,6 +7,12 @@ using namespace std;
 
 class Product {
 private:
+    // CSV 정적 변수 선언 (파일 이름, 폴더 경로, 키워드)
+    // 메모리 할당 시 한번만 초기화되고 공유되는 변수
+    // 메모리 절약 및 효율적인 데이터 관리를 위해 사용
+    static const string FILENAME;
+    static const string FOLDER_PATH;
+    static const string KEYWORD;
     int productId;
     string name;
     string category;
@@ -20,6 +26,11 @@ public:
     Product();
     Product(int id, string n, string c, int p, string b, float r, float e, int w);
 
+    // CSV 관련 getter
+    string getFilename() const { return FILENAME; }
+    string getFolderPath() const { return FOLDER_PATH; }
+    string getKeyword() const { return KEYWORD; }
+
     // get
     int getProductId() const;
     string getName() const;
@@ -29,7 +40,7 @@ public:
     float getrewardpoints() const;
     float getExpirationDate() const;
     int getWholesalePrice() const;
-
+    
     // set
     void setProductId(int id);
     void setName(const string& n);
@@ -42,6 +53,7 @@ public:
 
     // 제품 정보 출력
     void info() const;
+    string toString() const;
 };
 
 #endif

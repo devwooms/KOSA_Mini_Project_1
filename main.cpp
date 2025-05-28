@@ -5,7 +5,7 @@
 #include <cstdlib>
 #endif
 
-#include "customer/customerMenu.h"
+// #include "customer/customerMenu.h"
 #include "admin/adminMenu.h"
 
 void mainTiTle(){
@@ -40,7 +40,7 @@ void displayMainMenu() {
 
     switch(mainChoice){
         case 1:
-            customerMenu();
+            // customerMenu();
             break;
         case 2:
             adminMenu();

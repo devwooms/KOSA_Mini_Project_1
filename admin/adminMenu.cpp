@@ -5,6 +5,8 @@
 #include <cstdlib>
 #endif
 #include "adminMenu.h"
+#include "../controller/csvManager.h"
+#include "../model/product/product.h"
 
 using namespace std;
 
@@ -53,34 +55,47 @@ void productManagement(){
     int wholesalePrice;
     string item;
     Product newProduct;
+    CsvManager<Product> csvManager;
 
     switch(adminChoice){
         case 1:
-            // productManagement();
             break;
         case 2:
-            cout << " === 제품 입력 === " << endl;
-            cout << "제품 번호: ";
-            cin >> productId;
-            cout << "제품 이름: ";
-            cin >> name;
-            cout << "제품 카테고리: ";
-            cin >> category;
-            cout << "제품 가격: ";
-            cin >> price;
-            cout << "제품 브랜드: ";
-            cin >> brand;
-            cout << "제품 적립 포인트: ";
-            cin >> rewardpoints;
-            cout << "제품 이벤트 할인: ";
-            cin >> expirationDate;
-            cout << "제품 업체 가격: ";
-            cin >> wholesalePrice;
+            newProduct = Product(
+                1231, 
+                "test", 
+                "test", 
+                1000, 
+                "test", 
+                0.1, 
+                0.1, 
+                1000);
+            csvManager.saveCSV(newProduct);
+            
+            // cout << " === 제품 입력 === " << endl;
+            // cout << "제품 번호: ";
+            // cin >> productId;
+            // cout << "제품 이름: ";
+            // cin >> name;
+            // cout << "제품 카테고리: ";
+            // cin >> category;
+            // cout << "제품 가격: ";
+            // cin >> price;
+            // cout << "제품 브랜드: ";
+            // cin >> brand;
+            // cout << "제품 적립 포인트: ";
+            // cin >> rewardpoints;
+            // cout << "제품 이벤트 할인: ";
+            // cin >> expirationDate;
+            // cout << "제품 업체 가격: ";
+            // cin >> wholesalePrice;
 
-            newProduct = Product(productId, name, category, price, brand, rewardpoints, expirationDate, wholesalePrice);
-            newProduct.info();
-            cout << "제품 입력이 완료되었습니다." << endl;
-            cout << "계속하시려면 아무 키나 누르세요...";
+            // newProduct = Product(productId, name, category, price, brand, rewardpoints, expirationDate, wholesalePrice);
+            // newProduct.info();
+
+            // cout << "제품 입력이 완료되었습니다." << endl;
+            // cout << "계속하시려면 아무 키나 누르세요...";
+
             cin.ignore();
             cin.get();
             break;
