@@ -2,7 +2,7 @@
 #define ADMIN_MENU_H
 
 #include <string>
-#include "../model/product/product.h"
+#include "../model/entity/product/product.h"
 
 using namespace std;
 

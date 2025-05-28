@@ -4,11 +4,14 @@
 #else
 #include <cstdlib>
 #endif
-#include "adminMenu.h"
-#include "../model/csvRepository.h"
-#include "../model/product/product.h"
+#include "../view/adminMenu.h"
+#include "../controller/csvController.h"
+#include "../model/entity/product/product.h"
+#include "../controller/productController.h"
 
 using namespace std;
+
+ProductController productController;
 
 // 큰 타이틀 지금 화면 나타내기
 void adminTiTle(){
@@ -18,7 +21,7 @@ void adminTiTle(){
     cout << "┌" << line << "┐" << endl;
     cout << "│     " << title << "     │" << endl;
     cout << "└" << line << "┘" << endl;
-    cout << "\033[0m"; // 색상 리셋   
+    cout << "\033[0m"; // 색상 리셋
 }
 
 // 화면 지우기
@@ -45,65 +48,65 @@ void productManagement(){
     cout << "선택: ";
     cin >> adminChoice;
 
-    int productId;
-    string name;
-    string category;
-    string brand;
-    int price;
-    int rewardpoints;
-    int expirationDate;
-    int wholesalePrice;
-    string item;
     Product newProduct;
-    CsvRepository<Product> csvRepository;
+    int pkId;
+    string name;
+    int price;
+    
+    CsvController<Product> csvController;
+    vector<Product> products;
 
     switch(adminChoice){
         case 1:
+            products = productController.getAll();
+            for (auto& p : products) p.info();
+            cout << "제품 조회 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
+            cin.ignore();
+            cin.get();
             break;
         case 2:
-            newProduct = Product(
-                321321, 
-                "test2", 
-                "test2", 
-                1000, 
-                "test2", 
-                100, 
-                100, 
-                1000);
-            csvRepository.saveCSV(newProduct);
-            
-            // cout << " === 제품 입력 === " << endl;
-            // cout << "제품 번호: ";
-            // cin >> productId;
-            // cout << "제품 이름: ";
-            // cin >> name;
-            // cout << "제품 카테고리: ";
-            // cin >> category;
-            // cout << "제품 가격: ";
-            // cin >> price;
-            // cout << "제품 브랜드: ";
-            // cin >> brand;
-            // cout << "제품 적립 포인트: ";
-            // cin >> rewardpoints;
-            // cout << "제품 이벤트 할인: ";
-            // cin >> expirationDate;
-            // cout << "제품 업체 가격: ";
-            // cin >> wholesalePrice;
-
-            // newProduct = Product(productId, name, category, price, brand, rewardpoints, expirationDate, wholesalePrice);
-            // newProduct.info();
-
-            // cout << "제품 입력이 완료되었습니다." << endl;
-            // cout << "계속하시려면 아무 키나 누르세요...";
-
+            cout << "제품 번호를 입력해주세요: ";
+            cin >> pkId;
+            cout << "제품 이름을 입력해주세요: ";
+            cin >> name;
+            cout << "제품 가격을 입력해주세요: ";
+            cin >> price;
+            newProduct.setPkId(pkId);
+            newProduct.setName(name);
+            newProduct.setPrice(price);
+            productController.add(newProduct);
+            cout << "제품 입력 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
             cin.ignore();
             cin.get();
             break;
         case 3:
-            // productManagement();
+            products = productController.getAll();
+            for (auto& p : products) p.info();
+            cout << "수정할 제품의 번호를 입력해주세요: ";
+            cin >> pkId;
+            cout << "제품 이름을 입력해주세요: ";
+            cin >> name;
+            cout << "제품 가격을 입력해주세요: ";
+            cin >> price;
+            newProduct.setPkId(pkId);
+            newProduct.setName(name);
+            newProduct.setPrice(price);
+            productController.update(newProduct);
+            cout << "제품 수정 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
+            cin.ignore();
+            cin.get();
             break;
         case 4:
-            // productManagement();
+            cout << "삭제할 제품의 번호를 입력해주세요: ";
+            cin >> adminChoice;
+            productController.remove(adminChoice);
+            cout << "제품 삭제 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
+            cin.ignore();
+            cin.get();
             break;
         case 0:
             return;
@@ -118,21 +121,20 @@ void paymentAndTransactionSystem(){
     clearScreenAdmin();
     adminTiTle();
     int adminChoice;
-    cout << " === 결제 및 거래 처리 시스템 === " << endl;
-    cout << "1. 상품 재고 증가/차감" << endl;
-    cout << "2. 상품 주문 정보 (날짜, 수량, 유효기한)" << endl;
-    cout << "3. 회원 포인트 적립/차감" << endl;
-    cout << "4. 거래 내역 영수증 (날짜, 물품 항목, 시간, 금액)" << endl;
+    cout << " === 재고 관리 === " << endl;
+    cout << "1. 상품 재고 조회" << endl;
+    cout << "2. 상품 재고 증가/차감" << endl;
+    cout << "3. 상품 유통기한 조회" << endl;
     cout << "0. 뒤로 가기" << endl;
     cout << "선택: ";
     cin >> adminChoice;
 
     switch(adminChoice){
         case 1:
-            // paymentAndTransactionSystem();
             break;
         case 2:
-            // paymentAndTransactionSystem();
+            break;
+        case 3:
             break;
         case 0:
             return;
@@ -150,7 +152,7 @@ void adminMenu(){
         clearScreenAdmin();
         adminTiTle();
         cout << "1. 제품 관리" << endl;
-        cout << "2. 결제 및 거래 처리 시스템" << endl;
+        cout << "2. 재고 관리" << endl;
         cout << "0. 종료" << endl;
         cout << "선택: ";
         cin >> adminChoice;

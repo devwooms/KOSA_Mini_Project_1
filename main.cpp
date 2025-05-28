@@ -5,8 +5,7 @@
 #include <cstdlib>
 #endif
 
-// #include "customer/customerMenu.h"
-#include "admin/adminMenu.h"
+#include "view/adminMenu.h"
 
 void mainTiTle(){
     std::string title = "KOSA 편의점";
