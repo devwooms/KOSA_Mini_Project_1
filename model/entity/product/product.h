@@ -13,30 +13,35 @@ private:
     static const string FILENAME;
     static const string FOLDER_PATH;
     static const string KEYWORD;
+    static const string HEADER; 
     // Primary Key
     int pkId;
     string name;
+    string category;
     int price;
 
 public:
-    static string getCSVHeader();
     Product();
-    Product(int id, string n, int p);
+    Product(int id, string name, string category, int price);
+    virtual ~Product() = default;  // 가상 소멸자 추가
 
     // CSV 관련 getter
     virtual string getFilename() const { return FILENAME; }
     virtual string getFolderPath() const { return FOLDER_PATH; }
     virtual string getKeyword() const { return KEYWORD; }
+    virtual string getHeader() const { return HEADER; }
 
     // get
     int getPkId() const;
     string getName() const;
+    string getCategory() const;
     int getPrice() const;
     
     // set
     void setPkId(int id);
-    void setName(const string& n);
-    void setPrice(int p);
+    void setName(const string& name);
+    void setCategory(const string& category);
+    void setPrice(int price);
 
 
     // 제품 정보 출력

@@ -19,6 +19,18 @@
         "vector": "cpp",
         "cstdlib": "cpp",
         "iostream": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "__availability": "cpp",
+        "memory": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "complex": "cpp",
+        "deque": "cpp",
+        "format": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "mutex": "cpp",
+        "unordered_map": "cpp",
+        "utility": "cpp"
     }
 }

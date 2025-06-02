@@ -2,25 +2,29 @@
 #define STOCK_CONTROLLER_H
 
 #include "../model/entity/stock/stock.h"
-#include "../controller/csvController.h"
+#include "../data/csvRepository.h"
 
 using namespace std;
 
 class StockController {
 private:
-    CsvController<Stock> stockCsvController;
+    CsvRepository<Stock> stockCsvRepository;
 
 public:
     StockController();
     ~StockController();
     
+    // 지하은님 따라서 정리해보기
     // 재고 관리 메서드
-    vector<Stock> getAll();            // 재고 조회
-    bool add(const Stock& stock);      // 재고 추가
-    bool update(const Stock& stock);   // 재고 수정
-    bool remove(int productId);        // 재고 삭제
+    // 재고 조회, 입력, 수정, 삭제
+    vector<Stock>   getAll(Stock& stock)  { return stockCsvRepository.getAll(stock);};
+    void            add(Stock& stock)     { stockCsvRepository.add(stock);};
+    void            update(Stock& stock)  { stockCsvRepository.update(stock);};
+    void            remove(Stock& stock)  { stockCsvRepository.remove(stock);};
     
     // 재고 특화 메서드
+    // 특정 제품 조회   
+    Stock get(int pkId) { return stockCsvRepository.get(pkId); }
     bool updateQuantity(int productId, int quantity);  // 재고 수량 변경
     bool checkExpiration(int productId);              // 유통기한 확인
 };

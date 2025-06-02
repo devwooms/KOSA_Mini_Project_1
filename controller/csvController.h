@@ -30,6 +30,14 @@ private:
         return result;
     }
 
+    // CSV 헤더 작성
+    void writeHeader(ofstream& file, const T& obj) {
+        string header = obj.getHeader();
+        if (!header.empty()) {
+            file << header << endl;
+        }
+    }
+
 public:
     // 디렉토리 체크
     void checkDirectory(const string& folderPath) {
@@ -56,17 +64,29 @@ public:
         }
     }
 
-    // 파일 체크
-    void checkFile(const string& filename) {
+    // 파일 체크 및 헤더 추가
+    void checkFile(const string& filename, const T& obj) {
         if (!exists(filename)) {
             ofstream file(filename);
-            file.close();
+            if (file.is_open()) {
+                writeHeader(file, obj);
+                file.close();
+            }
             if (Config::LOG_ENABLED) {
                 cout << "파일이 생성되었습니다." << endl;
             }
         } else {
             if (Config::LOG_ENABLED) {
                 cout << "파일이 이미 존재합니다." << endl;
+            }
+            // 파일이 비어있는지 확인
+            ifstream checkFile(filename);
+            checkFile.seekg(0, ios::end);
+            if (checkFile.tellg() == 0) {
+                checkFile.close();
+                ofstream file(filename);
+                writeHeader(file, obj);
+                file.close();
             }
         }
     }
@@ -78,7 +98,7 @@ public:
         // 디렉토리 체크
         checkDirectory(obj.getFolderPath());
         // 파일 체크
-        checkFile(fullPath);
+        checkFile(fullPath, obj);
         // 파일 열기
         ifstream file(fullPath);
         if (!file.is_open()) {
@@ -91,12 +111,19 @@ public:
         // 파일 읽기
         vector<T> objects;
         string line;
+        bool isFirstLine = true;  // 헤더 라인 스킵을 위한 플래그
 
         while (getline(file, line)) {
-            vector<string> data = parseCSVLine(line);
-            T newObj;
-            if (newObj.parseFromCSV(data)) {  // 각 클래스가 자신의 파싱 로직 구현
-                objects.push_back(newObj);
+            if (isFirstLine) {  // 첫 번째 줄(헤더)은 건너뛰기
+                isFirstLine = false;
+                continue;
+            }
+            if (!line.empty()) {  // 빈 줄 무시
+                vector<string> data = parseCSVLine(line);
+                T newObj;
+                if (newObj.parseFromCSV(data)) {  // 각 클래스가 자신의 파싱 로직 구현
+                    objects.push_back(newObj);
+                }
             }
         }
         
@@ -112,13 +139,23 @@ public:
     void saveCSV(const T& obj) {
         string fullPath = obj.getFolderPath() + "/" + obj.getFilename();
         checkDirectory(obj.getFolderPath());
-        checkFile(fullPath);
+        checkFile(fullPath, obj);
         
+        // 파일 크기 확인
+        ifstream checkFile(fullPath);
+        checkFile.seekg(0, ios::end);
+        bool isEmpty = (checkFile.tellg() <= 0);
+        checkFile.close();
+
         // append 모드로 파일 열기
         ofstream file(fullPath, ios::app);
         if (file.is_open()) {
-            // 파일이 비어있지 않다면 새 줄 추가
-            if (file.tellp() != 0) {
+            // 파일이 비어있다면 헤더 추가
+            if (isEmpty) {
+                writeHeader(file, obj);
+            }
+            // 데이터 추가 시 새 줄 추가
+            else {
                 file << "\n";
             }
             file << obj.toCSV();
