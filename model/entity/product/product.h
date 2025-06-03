@@ -2,6 +2,7 @@
 #define PRODUCT_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -13,42 +14,43 @@ private:
     static const string FILENAME;
     static const string FOLDER_PATH;
     static const string KEYWORD;
-    static const string HEADER; 
     // Primary Key
     int pkId;
     string name;
-    string category;
     int price;
+    string productType;  // instantMeal, drink, tobacco 등 제품 타입 구분
 
 public:
     Product();
-    Product(int id, string name, string category, int price);
+    Product(int id, string name, int price, string type);
     virtual ~Product() = default;  // 가상 소멸자 추가
 
     // CSV 관련 getter
     virtual string getFilename() const { return FILENAME; }
     virtual string getFolderPath() const { return FOLDER_PATH; }
     virtual string getKeyword() const { return KEYWORD; }
-    virtual string getHeader() const { return HEADER; }
 
     // get
     int getPkId() const;
     string getName() const;
-    string getCategory() const;
     int getPrice() const;
+    string getProductType() const;
     
     // set
     void setPkId(int id);
     void setName(const string& name);
-    void setCategory(const string& category);
     void setPrice(int price);
-
+    void setProductType(const string& type);
 
     // 제품 정보 출력
     virtual void info() const;
     virtual string toString() const;
-    virtual string toCSV() const;
+
+    // CSV 관련 메서드
+    virtual string toCSV() const;  // 기본 제품 정보만 CSV로 변환
+    virtual string getAdditionalCSV() const { return ""; }  // 자식 클래스의 추가 정보를 toCSV에 추가
     virtual bool parseFromCSV(const vector<string>& data);
+    virtual bool parseAdditionalCSV(const vector<string>& data) { return true; }
 };
 
 #endif

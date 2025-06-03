@@ -4,7 +4,6 @@
 #else
 #include <cstdlib>
 #endif
-
 #include "view/adminMenu.h"
 
 void mainTiTle(){

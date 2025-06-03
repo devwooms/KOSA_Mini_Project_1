@@ -31,6 +31,8 @@
         "functional": "cpp",
         "mutex": "cpp",
         "unordered_map": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "filesystem": "cpp",
+        "map": "cpp"
     }
 }
