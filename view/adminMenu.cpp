@@ -267,130 +267,114 @@ void paymentAndTransactionSystem(){
     adminTiTle();
     int adminChoice;
 
-    // shared_ptr<Product> product;  // Product를 shared_ptr로 변경
-    // Stock stock;
-    // int pkId;
-    // int quantity;
-    // string expirationDate;
-    // vector<Stock> stocks;
+    vector<shared_ptr<Product>> products = productController.getAll();
+    shared_ptr<Product> product;  
+    int pkId;
 
-    // cout << " === 재고 관리 === " << endl;
-    // cout << "1. 상품 재고 조회" << endl;
-    // cout << "2. 상품 재고 입력" << endl;
-    // cout << "3. 상품 재고 증가/차감" << endl;
-    // cout << "4. 상품 유통기한 조회" << endl;
-    // cout << "0. 뒤로 가기" << endl;
-    // cout << "선택: ";
-    // cin >> adminChoice;
+    vector<shared_ptr<Stock>> stocks = stockController.getAll();
+    shared_ptr<Stock> stock;
+    int quantity;
+    string expirationDate;
 
-    // switch(adminChoice){
-    //     case 1:
-    //         stocks = stockController.getAll(stock);
-    //         for (auto& s : stocks) s.info();
-    //         cout << "재고 조회 완료" << endl;
-    //         cout << "아무 키나 눌러주세요..." << endl;
-    //         cin.ignore();
-    //         cin.get();
-    //         break;
-    //     case 2:
-    //         cout << "상품 번호를 입력해주세요: ";
-    //         cin >> pkId;
-    //         product = productController.get(pkId);
-    //         // 상품이 존재하지 않는 경우
-    //         if (!product || product->getPkId() == 0) {  // nullptr 체크 추가
-    //             cout << "상품이 존재하지 않습니다." << endl;
-    //             cout << "아무 키나 눌러주세요..." << endl;
-    //             cin.ignore();
-    //             cin.get();
-    //             return;
-    //         } 
-    //         // 상품이 존재하는 경우
-    //         else {
-    //             product->info();
-    //             cout << "이 제품이 맞습니까? (y/n): ";
-    //             char confirm;
-    //             cin >> confirm;
-    //             if (confirm == 'y') {
-    //                 cout << "상품 재고를 입력해주세요: ";
-    //                 cin >> quantity;
-    //                 stock.setPkId(pkId);
-    //                 stock.setQuantity(quantity);
-    //                 while(true){
-    //                     cout << "상품 유통기한을 입력해주세요(예: 2025-01-01): ";
-    //                     cin >> expirationDate;
-    //                     if (Validator::isValidDate(expirationDate)) {
-    //                         break;
-    //                     } else {
-    //                         cout << "유통기한 형식이 올바르지 않습니다." << endl;
-    //                     }
-    //                 }
-    //                 stock.setExpirationDate(expirationDate);
-    //                 stock.setProduct(*product);  // 역참조하여 Product 객체 전달
-    //                 stockController.add(stock);
-    //                 cout << "상품 재고 입력 완료" << endl;
-    //                 cout << "아무 키나 눌러주세요..." << endl;
-    //                 cin.ignore();
-    //                 cin.get();
-    //             } else {
-    //                 cout << "상품 재고 입력 취소" << endl;
-    //                 cout << "아무 키나 눌러주세요..." << endl;
-    //                 cin.ignore();
-    //                 cin.get();
-    //             }
-    //         }
-    //         break;
-    //     case 3:
-    //         cout << "상품 재고 증가/차감" << endl;
-    //         cout << "상품 번호를 입력해주세요: ";
-    //         cin >> pkId;
-    //         stock = stockController.get(pkId);
-    //         if (stock.getPkId() == 0) {
-    //             cout << "상품이 존재하지 않습니다." << endl;
-    //             cout << "아무 키나 눌러주세요..." << endl;
-    //             cin.ignore();
-    //             cin.get();
-    //             return;
-    //         } else {
-    //             stock.info();
-    //             cout << "현재 재고 수량: " << stock.getQuantity() << "개" << endl;
-    //             cout << "재고 수량 변경 (증가: +n, 감소: -n): ";
-    //             cin >> quantity;
-                
-    //             // 기존 수량에 입력받은 값을 더함
-    //             int newQuantity = stock.getQuantity() + quantity;
-                
-    //             // 재고가 음수가 되지 않도록 체크
-    //             if (newQuantity < 0) {
-    //                 cout << "재고가 부족합니다." << endl;
-    //                 cout << "아무 키나 눌러주세요..." << endl;
-    //                 cin.ignore();
-    //                 cin.get();
-    //                 return;
-    //             }
-                
-    //             stock.setQuantity(newQuantity);
-    //             stockController.update(stock);
-    //             cout << "재고 수량이 " << stock.getQuantity() << "개로 변경되었습니다." << endl;
-    //             cout << "아무 키나 눌러주세요..." << endl;
-    //             cin.ignore();
-    //             cin.get();
-    //         }
+
+    cout << " === 재고 관리 === " << endl;
+    cout << "1. 상품 재고 조회" << endl;
+    cout << "2. 상품 재고 입력" << endl;
+    cout << "3. 상품 재고 증가/차감" << endl;
+    cout << "0. 뒤로 가기" << endl;
+    cout << "선택: ";
+    cin >> adminChoice;
+
+    switch(adminChoice){
+        case 1:
+            for (const auto& stock : stocks) {
+                stock->info();
+            }
+            cout << "재고 조회 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
+            cin.ignore();
+            cin.get();
+            break;
+        case 2:
+            products = productController.getAll();
+            for (const auto& p : products) {
+                p->info();
+            }
+            cout << "상품 번호를 입력해주세요: ";
+            cin >> pkId;
+            product = productController.get(pkId);
+            if (!product) {
+                cout << "상품이 존재하지 않습니다." << endl;
+                cout << "아무 키나 눌러주세요..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            }
+            stock = stockController.get(pkId);
+            if (stock) {
+                cout << "이미 존재하는 상품입니다." << endl;
+                stock->info();
+                cout << "아무 키나 눌러주세요..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            }
             
-    //         break;
-    //     case 4:
-    //         stocks = stockController.getAll(stock);
-    //         for (auto& s : stocks) s.info();
-    //         cout << "재고 조회 완료" << endl;
-    //         cout << "아무 키나 눌러주세요..." << endl;
-    //         cin.ignore();
-    //         cin.get();
-    //         break;
-    //     case 0:
-    //         return;
-    //     default:
-    //         cout << "잘못된 선택입니다." << endl;
-    //         break;
-    // }
+            product->info();  // 상품 정보만 보여줌
+            cout << "이 상품이 맞습니까? (y/n): ";
+            char confirm;
+            cin >> confirm;
+            if (confirm == 'y') {
+                cout << "상품 재고를 입력해주세요: ";
+                cin >> quantity;
+                cout << "상품 유통기한을 입력해주세요: ";
+                cin >> expirationDate;
+                stock = make_shared<Stock>(pkId, product->getName(), product->getPrice(), quantity, expirationDate);
+                stockController.add(stock);
+                cout << "상품 재고 입력 완료" << endl;
+                cout << "아무 키나 눌러주세요..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            } else {
+                cout << "상품 재고 입력 취소" << endl;
+                cout << "아무 키나 눌러주세요..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            }
+            break;
+        case 3:
+            stocks = stockController.getAll();
+            for (const auto& s : stocks) {
+                s->info();
+            }
+            cout << "상품 번호를 입력해주세요: ";
+            cin >> pkId;
+            stock = stockController.get(pkId);
+            if (!stock){
+                cout << "상품이 존재하지 않습니다." << endl;
+                cout << "아무 키나 눌러주세요..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            }
+            cout << "상품 재고 증가/차감" << endl;
+            cout << "상품 재고 증가/차감 수량: ";
+            cin >> quantity;
+            stock->setQuantity(stock->getQuantity() + quantity);
+            stockController.update(stock);
+            cout << "상품 재고 증가/차감 완료" << endl;
+            cout << "아무 키나 눌러주세요..." << endl;
+            cin.ignore();
+            cin.get();
+            break;
+        case 0:
+            return;
+        default:
+            cout << "잘못된 선택입니다." << endl;
+            break;
+    }
 }
 
 // --------------------------------- 관리자 메뉴 ---------------------------------

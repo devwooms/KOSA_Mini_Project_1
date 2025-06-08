@@ -8,7 +8,10 @@ using namespace std;
 
 class Stock {
 private:
-    Product product;
+    // Primary Key
+    int pkId;
+    string name;
+    int price;
     int quantity;
     string expirationDate;
     
@@ -18,26 +21,25 @@ private:
     static const string KEYWORD;
     static const string HEADER;
 
-    // Primary Key
-    int pkId;
-
 public:
     Stock();
-    Stock(int pkId, Product product, int quantity, string expirationDate);
+    Stock(int pkId, string name, int price, int quantity, string expirationDate);
 
     // get
     int getPkId() const;
+    string getName() const;
+    int getPrice() const;
     int getQuantity() const;
     string getExpirationDate() const;
-    const Product& getProduct() const;  // Product 객체 접근자 추가
 
     // set
     void setPkId(int pkId);
+    void setName(const string& name);
+    void setPrice(int price);
     void setQuantity(int quantity);
     void setExpirationDate(const string& expirationDate);
 
-
-    void setProduct(Product product);
+    
 
     // CSV 파일 관련 메서드
     string getFilename() const { return FILENAME; }
