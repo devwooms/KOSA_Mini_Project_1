@@ -14,6 +14,7 @@ file(GLOB_RECURSE VIEW_SOURCES
 # 소스 파일 목록
 set(SOURCES
     main.cpp
+    util.cpp
     ${VIEW_SOURCES}
 )
 

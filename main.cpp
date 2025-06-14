@@ -1,9 +1,7 @@
-#include <iostream>
-#include <memory>
-#include "view/menuView.h"
+#include "controller/screenController.h"
 
 int main() {
-    MenuView menuView;
-    menuView.run();
+    screenController controller;
+    controller.run();
     return 0;
 }
