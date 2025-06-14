@@ -3,10 +3,8 @@
 #include <memory>
 
 screenController::screenController() {
-    // 뷰 레지스트리 초기화
-    viewRegistry["test1"] = std::make_shared<TestView1>();
-    viewRegistry["test2"] = std::make_shared<TestView2>();
-    viewRegistry["test3"] = std::make_shared<TestView3>();
+    // 초기 화면 설정
+    navigateTo("test1");
 }
 
 void screenController::run() {
@@ -26,8 +24,8 @@ void screenController::run() {
 void screenController::navigateTo(const std::string& viewId) {
     auto newView = createView(viewId);
     if (newView) {
-        transitionTo(newView);
         viewStack.push(newView);
+        newView->display();  // 새로운 화면 표시
     }
 }
 
@@ -35,8 +33,7 @@ void screenController::goBack() {
     if (canGoBack()) {
         viewStack.pop();
         if (!viewStack.empty()) {
-            auto previousView = viewStack.top();
-            transitionTo(previousView);
+            viewStack.top()->display();  // 이전 화면 다시 표시
         }
     }
 }
@@ -52,18 +49,14 @@ void screenController::clearStackAndNavigateTo(const std::string& viewId) {
     navigateTo(viewId);
 }
 
-void screenController::transitionTo(std::shared_ptr<baseScreenView> view) {
-    if (view) {
-        view->clearScreen();
-        view->clearErrors();
-    }
-}
-
+// 화면 생성
 std::shared_ptr<baseScreenView> screenController::createView(const std::string& viewId) {
-    auto it = viewRegistry.find(viewId);
-    if (it != viewRegistry.end()) {
-        // 뷰의 새로운 인스턴스 생성
-        return std::make_shared<std::remove_reference_t<decltype(*it->second)>>(*it->second);
+    if (viewId == "test1") {
+        return std::make_shared<TestView1>();
+    } else if (viewId == "test2") {
+        return std::make_shared<TestView2>();
+    } else if (viewId == "test3") {
+        return std::make_shared<TestView3>();
     }
     return nullptr;
 } 

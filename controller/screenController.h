@@ -6,12 +6,11 @@
 #include "../view/screens/TestView2.hpp"
 #include "../view/screens/TestView3.hpp"
 #include <memory>
-#include <unordered_map>
 #include <stack>
 
 class screenController {
 public:
-    screenController();
+    screenController();  // 일반 생성자로 변경
     void run();
 
     // 화면 전환 및 관리 메서드들
@@ -21,12 +20,10 @@ public:
     void clearStackAndNavigateTo(const std::string& viewId);  // 스택 초기화 후 새로운 화면으로 이동
 
 private:
-    // 화면 전환 내부 구현
-    void transitionTo(std::shared_ptr<baseScreenView> view);
+    // 화면 생성
     std::shared_ptr<baseScreenView> createView(const std::string& viewId);
 
-    // 화면 저장소
-    std::unordered_map<std::string, std::shared_ptr<baseScreenView>> viewRegistry;
+    // 화면 스택
     std::stack<std::shared_ptr<baseScreenView>> viewStack;
 };
 

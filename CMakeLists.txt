@@ -11,11 +11,25 @@ file(GLOB_RECURSE VIEW_SOURCES
     "view/*.h"
 )
 
+# model 폴더의 모든 소스 파일을 자동으로 찾기
+file(GLOB_RECURSE MODEL_SOURCES
+    "model/*.cpp"
+    "model/*.h"
+)
+
+# controller 폴더의 모든 소스 파일을 자동으로 찾기
+file(GLOB_RECURSE CONTROLLER_SOURCES
+    "controller/*.cpp"
+    "controller/*.h"
+)
+
 # 소스 파일 목록
 set(SOURCES
     main.cpp
     util.cpp
     ${VIEW_SOURCES}
+    ${MODEL_SOURCES}
+    ${CONTROLLER_SOURCES}
 )
 
 # 헤더 파일 디렉토리

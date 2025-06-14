@@ -28,8 +28,10 @@ public:
     std::string getTitle() const;
     std::vector<std::string> getMenuItems() const;
     std::function<void()> getMenuAction() const;
-    
 
+    // 화면 표시 및 입력 처리 (순수 가상 함수)
+    virtual void display() = 0;     // 화면 표시 (자식 클래스에서 반드시 구현)
+    virtual int getInput() = 0;     // 사용자 입력 처리 (자식 클래스에서 반드시 구현)
 };
 
 #endif // BASE_SCREEN_VIEW_HPP 
