@@ -4,7 +4,7 @@
 #else
 #include <cstdlib>
 #endif
-#include "../view/adminMenu.h"
+#include "adminMenu.h"
 #include "../model/entity/product/product.h"
 #include "../model/entity/product/drink.h"
 #include "../model/entity/product/instantMeal.h"
@@ -15,10 +15,6 @@
 #include "../utils/validator.h"
 
 using namespace std;
-
-ProductController productController;
-StockController stockController;
-
 
 // 큰 타이틀 지금 화면 나타내기
 void adminTiTle(){

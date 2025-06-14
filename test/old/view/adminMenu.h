@@ -1,10 +1,12 @@
 #ifndef ADMIN_MENU_H
 #define ADMIN_MENU_H
 
-#include <string>
-#include "../model/entity/product/product.h"
+#include "../controller/productController.h"
+#include "../controller/stockController.h"
 
-using namespace std;
+// 전역 변수 선언
+extern ProductController productController;
+extern StockController stockController;
 
 // 큰 타이틀 지금 화면 나타내기
 void adminTiTle();
