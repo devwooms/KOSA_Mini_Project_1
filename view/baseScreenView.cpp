@@ -77,3 +77,11 @@ void BaseScreenView::goToScreen(std::shared_ptr<BaseScreenView> screen) {
     controller->pushScreen(screen);
   }
 }
+
+// 다음 화면으로 이동 (스킵)
+void BaseScreenView::goToScreenSkip(std::shared_ptr<BaseScreenView> screen) {
+  if (controller) {
+    controller->popScreen();
+    controller->pushScreen(screen);
+  }
+}

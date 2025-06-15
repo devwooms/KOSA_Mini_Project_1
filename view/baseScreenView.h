@@ -33,6 +33,7 @@ protected:
   // 기본 네비게이션 헬퍼
   void goBack();
   void goToScreen(std::shared_ptr<BaseScreenView> screen);
+  void goToScreenSkip(std::shared_ptr<BaseScreenView> screen);
 
 public:
   BaseScreenView() = default;

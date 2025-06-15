@@ -7,14 +7,13 @@ class User {
 public:
     // 사용자 권한 상수 정의
     static const int ADMIN = 0;      // 관리자 권한
-    static const int STAFF = 1;      // 직원 권한
-    static const int CUSTOMER = 2;   // 고객 권한
+    static const int CUSTOMER = 1;   // 고객 권한
 
 private:
     int ID;                     // 사용자 고유 ID (자동 생성)
     std::string userid;         // 사용자가 입력한 아이디
     std::string userpasswd;     // 사용자 비밀번호
-    int Permissions;            // 사용자 권한 (0: admin, 1: staff, 2: customer)
+    int Permissions;            // 사용자 권한 (0: admin, 1: customer)
 
 public:
     // 생성자

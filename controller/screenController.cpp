@@ -1,18 +1,5 @@
 #include "ScreenController.h"
 #include "../view/screens/HomeView.h"
-#include "../view/screens/LoginView.h"
-#include "../view/screens/SignupView.h"
-#include "../view/screens/ConsumerView.h"
-#include "../view/screens/AdminView.h"
-#include "../view/screens/ProductManagementView.h"
-#include "../view/screens/InventoryManagementView.h"
-#include "../view/screens/InventoryListView.h"
-#include "../view/screens/InventoryAddView.h"
-#include "../view/screens/InventoryModifyView.h"
-#include "../view/screens/ProductListView.h"
-#include "../view/screens/ProductAddView.h"
-#include "../view/screens/ProductEditView.h"
-#include "../view/screens/ProductDeleteView.h"
 #include <iostream>
 
 // ============================================================================

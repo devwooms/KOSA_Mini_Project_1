@@ -1,79 +1,89 @@
 #include "LoginView.h"
 
-
-LoginView::LoginView() : currentField(0), userCtrl(std::make_shared<UserController>()) {
+LoginView::LoginView() {
+    setErrorMessages({
+        " ",
+        "아이디 또는 비밀번호가 일치하지 않습니다.",
+        "로그인이 완료되었습니다!"
+    });
     setTitle("로그인");
-    resetState();
 }
 
-void LoginView::resetState() {
-    id = "";
-    password = "";
-    currentField = 0;
-}
+void LoginView::run() {
+    UserController userController;
+    setShowError(0);
+    while (true) {
+        // 화면 지우기
+        clearScreen();
 
-void LoginView::display() {
-    clearScreen();
-    renderTitle(getTitle());
-    renderMenuItems(getMenuItems());
+        // 에러 메시지 표시
+        renderErrorMessages(getErrorMessages()[getShowError()]);
 
-    std::cout << "로그인을 위해 다음 정보를 입력해주세요.\n\n";
-    
-    // 현재까지 입력된 정보 표시
-    if (!id.empty()) {
-        std::cout << "아이디: " << id << "\n";
-    }
-    if (!password.empty()) {
-        std::cout << "비밀번호: " << std::string(password.length(), '*') << "\n";
-    }
-    std::cout << "\n";
+        // 타이틀 표시
+        renderTitle(getTitle());
 
-    // 현재 입력해야 할 필드 표시
-    switch (currentField) {
-        case 0:
-            displayInputField("아이디");
+        std::cout << "로그인을 위해 다음 정보를 입력해주세요. (0: 뒤로가기)\n\n";
+        
+        // 아이디 입력
+        std::cout << "아이디: ";
+        std::cin >> id;
+        if (id == "0") {
+            goBack();
             break;
-        case 1:
-            displayInputField("비밀번호", true);
+        }
+        
+        // 비밀번호 입력
+        std::cout << "비밀번호: ";
+        std::cin >> password;
+        if (password == "0") {
+            goBack();
             break;
-    }
-}
-
-void LoginView::displayInputField(const std::string& fieldName, bool isPassword) {
-    std::cout << fieldName << "을(를) 입력하세요 (0: 뒤로가기): ";
-}
-
-void LoginView::processInput(const std::string& input) {
-    if (input == "0") {
-        goBack();
-        return;
-    }
-
-    switch (currentField) {
-        case 0:
-            id = input;
-            break;
-        case 1:
-            password = input;
-            break;
-    }
-    currentField++;
-}
-
-bool LoginView::validateInput() {
-    if (id.empty() || password.empty()) {
-        return false;
-    }
-
-    auto user = userCtrl->findUser(id);
-    if (!user || !user->checkPassword(password)) {
-        std::cout << "\n아이디 또는 비밀번호가 일치하지 않습니다!\n";
-        std::cout << "아무 키나 눌러주세요...";
+        }
+        
+        // 로그인 검증
+        auto user = userController.findUser(id);
+        if (!user || !user->checkPassword(password)) {
+            setShowError(1); // "아이디 또는 비밀번호가 일치하지 않습니다."
+            continue;
+        }
+        
+        // 로그인 성공
+        setShowError(2); // "로그인이 완료되었습니다!"
+        
+        // 성공 화면 표시
+        clearScreen();
+        renderErrorMessages(getErrorMessages()[getShowError()]);
+        renderTitle(getTitle());
+        
+        std::cout << "환영합니다, " << user->getUserId() << "님!\n";
+        std::cout << "권한: ";
+        switch (user->getPermissions()) {
+            case User::ADMIN:
+                std::cout << "관리자";
+                break;
+            case User::CUSTOMER:
+                std::cout << "고객";
+                break;
+            default:
+                std::cout << "알 수 없음";
+                break;
+        }
+        std::cout << "\n\n";
+        std::cout << "계속하려면 Enter를 누르세요...";
+        std::cin.ignore();
         std::cin.get();
-        resetState();
-        return false;
-    }
 
-    currentUser = user;  // 로그인 성공 시 현재 사용자 저장
-    return true;
+        switch (user->getPermissions()) {
+            case User::CUSTOMER:
+                goToScreenSkip(std::make_shared<CustomerView>());
+                break;
+            case User::ADMIN:
+                goToScreenSkip(std::make_shared<AdminView>());
+                break;
+            default:
+                goBack();
+                break;
+        }
+        break;
+    }
 } 
