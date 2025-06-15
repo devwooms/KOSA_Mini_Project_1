@@ -18,6 +18,7 @@ public:
     screenController();
     void run();
     void navigateTo(const std::string& screenName);
+    void navigateToSkip(const std::string& screenName);  // 이전 화면을 스택에서 제거하고 새 화면으로 이동
     void goBack();
     void registerScreen(const std::string& name, std::shared_ptr<baseScreenView> screen);
     int getInput(int maxChoice);  // 사용자 입력 처리 메서드

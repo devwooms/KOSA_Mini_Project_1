@@ -87,6 +87,28 @@ void screenController::run() {
             }
             continue;
         }
+
+        /* =============================== */
+        /* 로그인 화면인 경우 특별 처리 */
+        /* =============================== */
+        if (auto loginScreen = dynamic_cast<loginView*>(currentScreen.get())) {
+            std::string input;
+            std::getline(std::cin, input);
+            
+            loginScreen->processInput(input);
+            if (loginScreen->getCurrentField() == 2) {  // 모든 입력이 완료됨
+                if (loginScreen->validateInput()) {
+                    // 로그인 성공 시 적절한 화면으로 이동
+                    auto user = loginScreen->getCurrentUser();
+                    if (user->getPermissions() == User::ADMIN) {
+                        navigateToSkip("admin");
+                    } else {
+                        navigateToSkip("consumer");
+                    }
+                }
+            }
+            continue;
+        }
         
         /* 일반 메뉴 화면 처리 */
         int maxChoice = currentScreen->getMenuItems().size();
@@ -116,6 +138,19 @@ void screenController::navigateTo(const std::string& screenName) {
         auto screen = screens[screenName];
         screen->setController(this);
         screen->resetState();  // 화면 전환 시 상태 초기화
+        screenStack.push(screen);
+    }
+}
+
+void screenController::navigateToSkip(const std::string& screenName) {
+    if (screens.find(screenName) != screens.end()) {
+        if (!screenStack.empty()) {
+            screenStack.top()->resetState();  // 현재 화면의 상태 초기화
+            screenStack.pop();  // 현재 화면 제거
+        }
+        auto screen = screens[screenName];
+        screen->setController(this);
+        screen->resetState();  // 새 화면 초기화
         screenStack.push(screen);
     }
 }
