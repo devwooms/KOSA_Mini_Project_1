@@ -10,13 +10,13 @@
 using namespace std;
 
 class CsvRepository {
-private:
+public:
     // 디렉토리 존재 여부 확인
     bool checkDirectory(const string& filepath) const;
+
     // 파일 존재 여부 확인
     bool checkFile(const string& filepath) const;
-
-public:
+    
     // 파일 읽기
     vector<string> readFile(const string& filepath) const;
     // 파일 쓰기

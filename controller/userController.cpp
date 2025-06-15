@@ -1,23 +1,22 @@
 #include "UserController.h"
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 
-const std::string UserController::CSV_PATH = "../model/data/user.csv";
+const std::string UserController::CSV_PATH = "data/user.csv";
 
-UserController::UserController() : csvController(std::make_shared<CsvController>(CSV_PATH)) {
+UserController::UserController() : csvRepo(std::make_shared<CsvRepository>()) {
     // CSV 파일 초기화 (헤더 추가)
-    csvController->initializeWithHeaders({"ID", "UserID", "Password", "Permissions"});
+    if (!csvRepo->checkFile(CSV_PATH)) {
+        csvRepo->appendFile(CSV_PATH, csvRepo->vectorToCsv({"ID", "UserID", "Password", "Permissions"}));
+    }
     
     loadUsers();
 }
 
 void UserController::loadUsers() {
     users.clear();
-    auto records = csvController->readAllRecords();
+    auto lines = csvRepo->readFile(CSV_PATH);
     
-    for (size_t i = 1; i < records.size(); ++i) {  // 첫 줄은 헤더이므로 건너뜀
-        const auto& record = records[i];
+    for (size_t i = 1; i < lines.size(); ++i) {  // 첫 줄은 헤더이므로 건너뜀
+        auto record = csvRepo->csvToVector(lines[i]);
         if (record.size() >= 4) {
             User user(record[1], record[2], std::stoi(record[3]));
             users.push_back(user);
@@ -27,10 +26,10 @@ void UserController::loadUsers() {
 
 int UserController::findMaxUserId() const {
     int maxId = 0;
-    auto records = csvController->readAllRecords();
+    auto lines = csvRepo->readFile(CSV_PATH);
     
-    for (size_t i = 1; i < records.size(); ++i) {  // 첫 줄은 헤더이므로 건너뜀
-        const auto& record = records[i];
+    for (size_t i = 1; i < lines.size(); ++i) {  // 첫 줄은 헤더이므로 건너뜀
+        auto record = csvRepo->csvToVector(lines[i]);
         if (!record.empty()) {
             int currentId = std::stoi(record[0]);
             maxId = std::max(maxId, currentId);
@@ -57,7 +56,7 @@ bool UserController::addUser(const std::string& userid, const std::string& passw
         std::to_string(User::CUSTOMER)
     };
     
-    return csvController->addRecord(record);
+    return csvRepo->appendFile(CSV_PATH, csvRepo->vectorToCsv(record));
 }
 
 bool UserController::isUserIdExists(const std::string& userid) const {

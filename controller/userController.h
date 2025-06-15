@@ -2,7 +2,7 @@
 #define USER_CONTROLLER_H
 
 #include "../model/User.h"
-#include "CsvController.h"
+#include "../data/CsvRepository.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -15,8 +15,8 @@ private:
   // 사용자 목록
   std::vector<User> users;
 
-  // CSV 컨트롤러
-  std::shared_ptr<CsvController> csvController;
+  // CSV 리포지토리
+  std::shared_ptr<CsvRepository> csvRepo;
 
   // 사용자 목록 로드
   void loadUsers();

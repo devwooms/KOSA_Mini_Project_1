@@ -25,6 +25,12 @@ file(GLOB_RECURSE CONTROLLER_SOURCES
     "controller/*.h"
 )
 
+# data 폴더의 모든 소스 파일을 자동으로 찾기
+file(GLOB_RECURSE DATA_SOURCES
+    "data/*.cpp"
+    "data/*.h"
+)
+
 # 소스 파일 목록
 set(SOURCES
     main.cpp
@@ -32,6 +38,7 @@ set(SOURCES
     ${VIEW_SOURCES}
     ${MODEL_SOURCES}
     ${CONTROLLER_SOURCES}
+    ${DATA_SOURCES}
 )
 
 # 헤더 파일 디렉토리

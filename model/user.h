@@ -23,9 +23,11 @@ public:
     // Getter 메서드
     int getID() const { return ID; }
     std::string getUserId() const { return userid; }
+    std::string getUserPasswd() const { return userpasswd; }
     int getPermissions() const { return Permissions; }
     
     // Setter 메서드
+    void setID(int id) { this->ID = id; }
     void setUserId(const std::string& userid) { this->userid = userid; }
     void setUserPasswd(const std::string& passwd) { this->userpasswd = passwd; }
     void setPermissions(int permissions) { this->Permissions = permissions; }
