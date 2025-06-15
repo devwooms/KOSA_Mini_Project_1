@@ -2,13 +2,14 @@
 #define INVENTORY_CONTROLLER_H
 
 #include "../model/Inventory.h"
-#include "CsvController.h"
+#include "../data/CsvRepository.h"
 #include <vector>
 #include <memory>
 
 class InventoryController {
 private:
-    std::shared_ptr<CsvController> csvController;
+    static const std::string CSV_PATH;
+    std::shared_ptr<CsvRepository> csvRepo;
     
 public:
     InventoryController();

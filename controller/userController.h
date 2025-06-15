@@ -11,12 +11,11 @@ class UserController {
 private:
   // 파일 경로
   static const std::string CSV_PATH;
-
   // 사용자 목록
   std::vector<User> users;
-
   // CSV 리포지토리
   std::shared_ptr<CsvRepository> csvRepo;
+
 
   // 사용자 목록 로드
   void loadUsers();
