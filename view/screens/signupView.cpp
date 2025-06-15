@@ -1,7 +1,7 @@
 #include "signupView.h"
 #include "../viewRender.h"
 
-signupView::signupView() : currentField(0) {
+signupView::signupView() : currentField(0), userCtrl(std::make_shared<userController>()) {
     initialize();
 }
 
@@ -78,9 +78,23 @@ bool signupView::validateInput() {
     if (id.empty() || password.empty() || confirmPassword.empty()) {
         return false;
     }
-    return password == confirmPassword;
+    if (password != confirmPassword) {
+        return false;
+    }
+    if (userCtrl->isUserIdExists(id)) {
+        std::cout << "\n이미 존재하는 아이디입니다!\n";
+        std::cout << "아무 키나 눌러주세요...";
+        std::cin.get();
+        getController()->goBack();
+        return false;
+    }
+    return true;
 }
 
 bool signupView::isPasswordMismatch() const {
     return !password.empty() && !confirmPassword.empty() && password != confirmPassword;
+}
+
+bool signupView::registerUser() {
+    return userCtrl->addUser(id, password);
 } 

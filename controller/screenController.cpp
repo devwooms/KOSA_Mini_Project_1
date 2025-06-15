@@ -7,8 +7,6 @@
 #include "../view/screens/adminView.h"
 #include <iostream>
 #include <limits>
-#include <thread>
-#include <chrono>
 
 screenController::screenController() {
     // 화면들 등록
@@ -23,9 +21,9 @@ int screenController::getInput(int maxChoice) {
     int choice;
     while (true) {
         if (screenStack.size() > 1) {
-            std::cout << "선택하세요 (0: 뒤로가기, 1-" << maxChoice << "): ";
+            std::cout << "선택하세요 (0: 뒤로가기, 1~" << maxChoice << "): ";
         } else {
-            std::cout << "선택하세요 (0: 종료, 1-" << maxChoice << "): ";
+            std::cout << "선택하세요 (0: 종료, 1~" << maxChoice << "): ";
         }
         
         if (std::cin >> choice) {
@@ -56,7 +54,9 @@ void screenController::run() {
         // 현재 화면 표시
         currentScreen->display();
         
-        // 회원가입 화면인 경우 특별 처리
+        /* =============================== */
+        /* 회원가입 화면인 경우 특별 처리 */
+        /* =============================== */
         if (auto signupScreen = dynamic_cast<signupView*>(currentScreen.get())) {
             std::string input;
             std::getline(std::cin, input);
@@ -69,18 +69,26 @@ void screenController::run() {
             signupScreen->processInput(input);
             if (signupScreen->validateInput()) {
                 // 회원가입 완료 처리
-                std::cout << "\n회원가입이 완료되었습니다!\n";
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                goBack();
+                if (signupScreen->registerUser()) {
+                    std::cout << "\n회원가입이 완료되었습니다!\n";
+                    std::cout << "아무 키나 눌러주세요...";
+                    std::cin.get();
+                    goBack();
+                } else {
+                    std::cout << "\n회원가입 처리 중 오류가 발생했습니다.\n";
+                    std::cout << "아무 키나 눌러주세요...";
+                    std::cin.get();
+                }
             } else if (signupScreen->isPasswordMismatch()) {
                 std::cout << "\n비밀번호가 일치하지 않습니다!\n";
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+                std::cout << "아무 키나 눌러주세요...";
+                std::cin.get();
                 goBack();
             }
             continue;
         }
         
-        // 일반 메뉴 화면 처리
+        /* 일반 메뉴 화면 처리 */
         int maxChoice = currentScreen->getMenuItems().size();
         int choice = getInput(maxChoice);
         

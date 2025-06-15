@@ -6,14 +6,14 @@
 #include <fstream>
 #include "../model/user.h"
 
-class CSVController {
+class csvController {
 private:
     std::string filename;
     const char delimiter;
 
 public:
     // 생성자
-    CSVController(const std::string& filename, char delimiter = ',');
+    csvController(const std::string& filename, char delimiter = ',');
 
     // Create - 새로운 데이터 추가
     bool addRecord(const std::vector<std::string>& record);
@@ -32,6 +32,7 @@ public:
     bool isFileExists() const;
     int getRecordCount() const;
     bool createFile() const;
+    bool initializeWithHeaders(const std::vector<std::string>& headers);
 
 private:
     // 내부 헬퍼 메서드

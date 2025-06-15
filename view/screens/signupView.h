@@ -3,6 +3,7 @@
 
 #include "../baseScreenView.h"
 #include "../../controller/screenController.h"
+#include "../../controller/userController.h"
 #include <memory>
 #include <iostream>
 #include <limits>
@@ -14,6 +15,7 @@ private:
     std::string password;
     std::string confirmPassword;
     int currentField;  // 현재 입력 중인 필드 (0: id, 1: password, 2: confirmPassword)
+    std::shared_ptr<userController> userCtrl;
 
 public:
     signupView();
@@ -24,6 +26,7 @@ public:
     bool validateInput();
     bool isPasswordMismatch() const;  // 비밀번호 불일치 확인
     void resetState() override;
+    bool registerUser();  // 사용자 등록 메서드 추가
 };
 
 #endif // SIGNUP_VIEW_H 
