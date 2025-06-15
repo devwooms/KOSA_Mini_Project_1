@@ -6,8 +6,6 @@
 class AdminInventoryAddView : public BaseScreenView
 {
    private:
-    int getUserChoice();  // 사용자 입력 처리
-
    public:
     AdminInventoryAddView();
     void run() override;  // 자체 실행 로직

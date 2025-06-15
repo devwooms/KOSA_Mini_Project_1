@@ -3,51 +3,26 @@
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
+#include "../../controller/InventoryController.h"
 
 AdminInventoryAddView::AdminInventoryAddView()
 {
     setErrorMessages({
         " ",
-        "잘못된 입력입니다. 다시 선택하세요.",
+        "이미 등록된 제품ID입니다.",
     });
     setTitle("재고 입력");
-    setMenuItems({"새 재고 추가"});
-    setMenuActions({[this]()
-                    {
-                        // 새 재고 추가 기능
-                        std::cout << "새 재고 추가 기능 준비 중...\n";
-                    }});
 }
 
-int AdminInventoryAddView::getUserChoice()
-{
-    int choice;
-    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
 
-    if (std::cin >> choice)
-    {
-        // 입력 버퍼 비우기
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        // 유효한 입력인지 확인
-        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            return choice;
-        }
-    }
-    else
-    {
-        // 잘못된 입력 처리
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    // 잘못된 입력의 경우 -1 반환
-    return -1;
-}
 
 void AdminInventoryAddView::run()
 {
+    std::string productID;
+    int stock;
+
+    InventoryController inventoryController;
+
     while (true)
     {
         // 화면 지우기
@@ -59,37 +34,33 @@ void AdminInventoryAddView::run()
         // 타이틀 표시
         renderTitle(getTitle());
 
-        // 메뉴 표시
-        renderMenuItems(getMenuItems());
 
-        // 사용자 입력 받기
-        int choice = getUserChoice();
+        std::cout << "제품ID: ";
+        std::cin >> productID;
 
-        // 선택 처리
-        if (choice == -1)
+        if (productID == "0")
         {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
-        }
-        else if (choice == 0)
-        {
-            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
             goBack();
             break;
         }
-        else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            // 생성자에서 설정한 menuActions 활용
-            const auto& actions = getMenuActions();
-            if (choice <= actions.size() && actions[choice - 1])
-            {
-                actions[choice - 1]();  // 설정된 액션 실행
 
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
-            }
+        if (inventoryController.findInventoryByProductID(productID) != nullptr)
+        {
+            setShowError(1);
+            break;
         }
+        std::cout << "재고수량: ";
+        std::cin >> stock;
+
+        inventoryController.addInventory(productID, stock);
+
+        std::cout << "재고 등록이 완료되었습니다." << std::endl;
+
+
+        std::cout << "뒤로가려면 아무키나 누르세요...";
+        std::cin.get();
+
+        goBack();
+        break;
     }
 }

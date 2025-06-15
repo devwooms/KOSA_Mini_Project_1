@@ -53,6 +53,9 @@ void AdminInventoryListView::run()
             std::cout << "\n총 " << inventories.size() << "개 제품의 재고 정보\n";
         }
 
+        std::cout << "뒤로가려면 아무키나 누르세요...";
+        std::cin.get();
+
         // 뒤로가기 - 스택에서 제거하여 이전 화면으로
         goBack();
         break;

@@ -17,16 +17,12 @@ HomeView::HomeView()
         "로그인",
         "회원가입",
     });
-    setMenuActions({[this]()
-                    {
-                        // 로그인 화면으로 이동
-                        goToScreen(std::make_shared<LoginView>());
-                    },
-                    [this]()
-                    {
-                        // 회원가입 화면으로 이동
-                        goToScreen(std::make_shared<SignupView>());
-                    }});
+    setMenuActions({
+        // 로그인 화면으로 이동
+        [this]() { goToScreen(std::make_shared<LoginView>()); },
+        // 회원가입 화면으로 이동
+        [this]() { goToScreen(std::make_shared<SignupView>()); },
+    });
 }
 
 int HomeView::getUserChoice()
