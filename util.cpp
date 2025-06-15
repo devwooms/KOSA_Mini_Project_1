@@ -1,12 +1,14 @@
-#include "util.hpp"
+#include "util.h"
 #include <iostream>
 #include <limits>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 using namespace std;
 
-namespace Util {
+namespace util {
     // 입력 버퍼를 지우는 함수
-    void clearBuffer() {
+    void clearInputBuffer() {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -51,5 +53,21 @@ namespace Util {
     void printLeftAligned(const string& text, int indent, bool newline) {
         cout << string(indent, ' ') << text;
         if (newline) cout << endl;
+    }
+
+    std::string getInputLine() {
+        std::string input;
+        std::getline(std::cin, input);
+        return input;
+    }
+
+    void pressEnterToContinue() {
+        std::cout << "\n아무 키나 눌러주세요...";
+        std::cin.get();
+    }
+
+    void displayError(const std::string& message) {
+        std::cout << "\n오류: " << message << "\n";
+        pressEnterToContinue();
     }
 }

@@ -5,6 +5,8 @@
 #include "../view/screens/signupView.h"
 #include "../view/screens/consumerView.h"
 #include "../view/screens/adminView.h"
+#include "../view/screens/productManagementView.h"
+#include "../view/screens/inventoryManagementView.h"
 #include <iostream>
 #include <limits>
 
@@ -15,6 +17,8 @@ screenController::screenController() {
     registerScreen("signup", std::make_shared<signupView>());
     registerScreen("consumer", std::make_shared<consumerView>());
     registerScreen("admin", std::make_shared<adminView>());
+    registerScreen("product_management", std::make_shared<productManagementView>());
+    registerScreen("inventory_management", std::make_shared<inventoryManagementView>());
 }
 
 int screenController::getInput(int maxChoice) {

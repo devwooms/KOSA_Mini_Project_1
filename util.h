@@ -1,15 +1,16 @@
-#ifndef UTIL_HPP
-#define UTIL_HPP
+#ifndef UTIL_H
+#define UTIL_H
 
+#include <string>
+#include <vector>
 #include <iostream>
 #include <limits>
-#include <string>
-#include <sys/ioctl.h>
-#include <unistd.h>
+#include <cstdlib>
+#include <memory>
 
-namespace Util {
+namespace util {
     // 입력 버퍼를 비우는 함수
-    void clearBuffer();
+    void clearInputBuffer();
     
     // 화면을 완전히 지우고 커서를 처음으로 이동하는 함수
     void clearScreen();
@@ -21,6 +22,10 @@ namespace Util {
     
     // 왼쪽에서 시작하는 들여쓰기된 출력
     void printLeftAligned(const std::string& text, int indent = 40, bool newline = true);
+
+    std::string getInputLine();
+    void pressEnterToContinue();
+    void displayError(const std::string& message);
 }
 
-#endif // UTIL_HPP 
+#endif // UTIL_H 
