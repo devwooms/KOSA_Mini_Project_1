@@ -1,6 +1,6 @@
 #include "UserController.h"
 
-const std::string UserController::CSV_PATH = "data/user.csv";
+const std::string UserController::CSV_PATH = "../data/user.csv";
 
 UserController::UserController() : csvRepo(std::make_shared<CsvRepository>()) {
     // CSV 파일 초기화 (헤더 추가)

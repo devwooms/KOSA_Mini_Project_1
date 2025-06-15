@@ -42,7 +42,7 @@ void LoginView::run() {
         
         // 로그인 검증
         auto user = userController.findUser(id);
-        if (!user || user->getUserId() != id || user->getUserPasswd() != password) {
+        if (!user || user->getUserPasswd() != password) {
             setShowError(1); // "아이디 또는 비밀번호가 일치하지 않습니다."
             continue;
         }

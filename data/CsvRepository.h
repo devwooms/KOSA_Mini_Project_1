@@ -11,9 +11,6 @@ using namespace std;
 
 class CsvRepository {
 public:
-    // 디렉토리 존재 여부 확인
-    bool checkDirectory(const string& filepath) const;
-
     // 파일 존재 여부 확인
     bool checkFile(const string& filepath) const;
     

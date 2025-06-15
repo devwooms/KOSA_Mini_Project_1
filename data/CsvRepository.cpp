@@ -1,14 +1,5 @@
 #include "CsvRepository.h"
 
-// 디렉토리 생성
-bool CsvRepository::checkDirectory(const string& filepath) const {
-    auto parentPath = filesystem::path(filepath).parent_path();
-    if (!parentPath.empty()) {
-        filesystem::create_directories(parentPath);
-    }
-    return true;
-}
-
 // 파일 존재 여부 확인
 bool CsvRepository::checkFile(const string& filepath) const {
     return filesystem::exists(filepath);
@@ -30,7 +21,6 @@ vector<string> CsvRepository::readFile(const string& filepath) const {
 
 // 파일 쓰기
 bool CsvRepository::writeFile(const string& filepath, const vector<string>& lines) const {
-    checkDirectory(filepath);
     ofstream file(filepath);
     if (!file) return false;
     
@@ -42,7 +32,6 @@ bool CsvRepository::writeFile(const string& filepath, const vector<string>& line
 
 // 파일 추가
 bool CsvRepository::appendFile(const string& filepath, const string& line) const {
-    checkDirectory(filepath);
     ofstream file(filepath, ios::app);
     if (!file) return false;
     
