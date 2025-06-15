@@ -5,24 +5,27 @@
 #include <string>
 #include <vector>
 
-#include "../data/CsvRepository.h"
+#include "BaseController.h"
 #include "../model/User.h"
 
-class UserController
+class UserController : public BaseController
 {
    private:
     // 파일 경로
     static const std::string CSV_PATH;
     // 사용자 목록
     std::vector<User> users;
-    // CSV 리포지토리
-    std::shared_ptr<CsvRepository> csvRepo;
 
-    // 사용자 목록 로드
-    void loadUsers();
+    // 사용자 목록 로드 (BaseController의 순수 가상 함수 구현)
+    void loadData() override;
 
     // 최대 사용자 ID 찾기
     int findMaxUserId() const;
+
+protected:
+    // BaseController의 순수 가상 함수들 구현
+    std::string getFilePath() const override;
+    std::vector<std::string> getHeaders() const override;
 
    public:
     UserController();

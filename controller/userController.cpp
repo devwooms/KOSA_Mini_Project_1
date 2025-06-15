@@ -2,22 +2,27 @@
 
 const std::string UserController::CSV_PATH = "../data/user.csv";
 
-UserController::UserController() : csvRepo(std::make_shared<CsvRepository>())
+UserController::UserController() : BaseController()
 {
-    // CSV 파일 초기화 (헤더 추가)
-    if (!csvRepo->checkFile(CSV_PATH))
-    {
-        csvRepo->appendFile(CSV_PATH,
-                            csvRepo->vectorToCsv({"ID", "UserID", "Password", "Permissions"}));
-    }
-
-    loadUsers();
+    // CSV 파일 초기화 후 데이터 로드
+    initializeCsvFile();
+    loadData();
 }
 
-void UserController::loadUsers()
+std::string UserController::getFilePath() const
+{
+    return CSV_PATH;
+}
+
+std::vector<std::string> UserController::getHeaders() const
+{
+    return {"ID", "UserID", "Password", "Permissions"};
+}
+
+void UserController::loadData()
 {
     users.clear();
-    auto lines = csvRepo->readFile(CSV_PATH);
+    auto lines = csvRepo->readFile(getFilePath());
 
     for (size_t i = 1; i < lines.size(); ++i)
     {  // 첫 줄은 헤더이므로 건너뜀
@@ -33,7 +38,7 @@ void UserController::loadUsers()
 int UserController::findMaxUserId() const
 {
     int maxId = 0;
-    auto lines = csvRepo->readFile(CSV_PATH);
+    auto lines = csvRepo->readFile(getFilePath());
 
     for (size_t i = 1; i < lines.size(); ++i)
     {  // 첫 줄은 헤더이므로 건너뜀
@@ -64,7 +69,7 @@ bool UserController::addUser(const std::string& userid, const std::string& passw
     std::vector<std::string> record = {std::to_string(newId), userid, password,
                                        std::to_string(User::CUSTOMER)};
 
-    return csvRepo->appendFile(CSV_PATH, csvRepo->vectorToCsv(record));
+    return csvRepo->appendFile(getFilePath(), csvRepo->vectorToCsv(record));
 }
 
 bool UserController::isUserIdExists(const std::string& userid) const

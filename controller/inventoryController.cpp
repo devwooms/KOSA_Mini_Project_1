@@ -1,21 +1,29 @@
 #include "InventoryController.h"
 
+// 인벤토리 데이터 파일 경로
 const std::string InventoryController::CSV_PATH = "../data/inventory.csv";
 
-InventoryController::InventoryController() : csvRepo(std::make_shared<CsvRepository>())
+InventoryController::InventoryController() : BaseController()
 {
-    // CSV 파일 초기화 (헤더 추가)
-    if (!csvRepo->checkFile(CSV_PATH))
-    {
-        csvRepo->appendFile(CSV_PATH, csvRepo->vectorToCsv({"ProductID", "Stock"}));
-    }
-    loadInventories();
+    // CSV 파일 초기화 후 데이터 로드
+    initializeCsvFile();
+    loadData();
 }
 
-void InventoryController::loadInventories()
+std::string InventoryController::getFilePath() const
+{
+    return CSV_PATH;
+}
+
+std::vector<std::string> InventoryController::getHeaders() const
+{
+    return {"ProductID", "Stock"};
+}
+
+void InventoryController::loadData()
 {
     inventories.clear();
-    auto lines = csvRepo->readFile(CSV_PATH);
+    auto lines = csvRepo->readFile(getFilePath());
 
     for (size_t i = 1; i < lines.size(); ++i)
     {  // 첫 줄은 헤더이므로 건너뜀
@@ -30,13 +38,13 @@ void InventoryController::loadInventories()
 
 std::vector<Inventory> InventoryController::getAllInventories()
 {
-    loadInventories();  // 최신 데이터 로드
+    loadData();  // 최신 데이터 로드
     return inventories;
 }
 
 Inventory* InventoryController::findInventoryByProductID(const std::string& productID)
 {
-    loadInventories();  // 최신 데이터 로드
+    loadData();  // 최신 데이터 로드
     for (auto& inventory : inventories)
     {
         if (inventory.getProductID() == productID)
@@ -57,12 +65,12 @@ bool InventoryController::addInventory(const std::string& productID, int stock)
 
     // CSV 파일에 추가
     std::vector<std::string> record = {productID, std::to_string(stock)};
-    return csvRepo->appendFile(CSV_PATH, csvRepo->vectorToCsv(record));
+    return csvRepo->appendFile(getFilePath(), csvRepo->vectorToCsv(record));
 }
 
 bool InventoryController::updateInventory(const std::string& productID, int stock)
 {
-    auto lines = csvRepo->readFile(CSV_PATH);
+    auto lines = csvRepo->readFile(getFilePath());
     bool found = false;
 
     for (size_t i = 1; i < lines.size(); ++i)
@@ -79,7 +87,7 @@ bool InventoryController::updateInventory(const std::string& productID, int stoc
 
     if (found)
     {
-        return csvRepo->writeFile(CSV_PATH, lines);
+        return csvRepo->writeFile(getFilePath(), lines);
     }
     return false;
 }
