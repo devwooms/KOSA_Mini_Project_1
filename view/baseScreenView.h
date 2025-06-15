@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <memory>
 
 // 전방 선언
 class screenController;
@@ -20,26 +21,37 @@ private:
     screenController* controller;
 
 public:
-    baseScreenView() : controller(nullptr) {}
+    baseScreenView() = default;
     virtual ~baseScreenView() = default;
 
+    virtual void initialize() = 0;
+    virtual void display() = 0;
+    virtual void resetState() {}  // 상태 초기화를 위한 가상 메서드 추가
+
     // setters
-    void setTitle(const std::string& newTitle);
-    void setMenuItems(const std::vector<std::string>& items);
-    void setMenuActions(const std::vector<std::function<void()>>& actions);
+    void setTitle(const std::string& newTitle) { title = newTitle; }
+    void setMenuItems(const std::vector<std::string>& items) { menuItems = items; }
+    void setMenuActions(const std::vector<std::function<void()>>& actions) { menuActions = actions; }
     void setController(screenController* ctrl) { controller = ctrl; }
 
     // getters
-    std::string getTitle() const;
-    std::vector<std::string> getMenuItems() const;
-    const std::vector<std::function<void()>>& getMenuActions() const;
+    std::string getTitle() const { return title; }
+    std::vector<std::string> getMenuItems() const { return menuItems; }
+    const std::vector<std::function<void()>>& getMenuActions() const { return menuActions; }
     screenController* getController() const { return controller; }
-
-    // 화면 표시
-    virtual void display() = 0;     // 화면 표시 (자식 클래스에서 반드시 구현)
 
     // utility functions
     void clearScreen() const;
+
+    void addMenuItem(const std::string& item, std::function<void()> action) {
+        menuItems.push_back(item);
+        menuActions.push_back(action);
+    }
+
+    void clearMenu() {
+        menuItems.clear();
+        menuActions.clear();
+    }
 };
 
 #endif // BASE_SCREEN_VIEW_H 

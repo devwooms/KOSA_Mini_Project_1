@@ -36,3 +36,8 @@ void viewRender::render(const std::string& title, const std::vector<std::string>
     renderTitle(title);
     renderMenuItems(menuItems);
 }
+
+void viewRender::render(const std::string& title) {
+    clearScreen();
+    renderTitle(title);
+}

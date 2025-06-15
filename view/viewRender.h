@@ -11,6 +11,7 @@ class viewRender {
 public:
     // 렌더링 메서드
     static void render(const std::string& title, const std::vector<std::string>& menuItems);
+    static void render(const std::string& title);
 
 private:
     // 섹션별 렌더링 메서드

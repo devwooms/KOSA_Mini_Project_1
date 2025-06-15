@@ -1,5 +1,5 @@
-#ifndef HOME_VIEW_H
-#define HOME_VIEW_H
+#ifndef ADMIN_VIEW_H
+#define ADMIN_VIEW_H
 
 #include "../baseScreenView.h"
 #include "../../controller/screenController.h"
@@ -7,11 +7,11 @@
 #include <iostream>
 #include <limits>
 
-class homeView : public baseScreenView {
+class adminView : public baseScreenView {
 public:
-    homeView();
+    adminView();
     void initialize() override;
     void display() override;
 };
 
-#endif // HOME_VIEW_H 
+#endif // ADMIN_VIEW_H 
