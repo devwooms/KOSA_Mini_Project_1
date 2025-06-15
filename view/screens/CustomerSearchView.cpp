@@ -54,11 +54,11 @@ void CustomerSearchView::run() {
             goBack();
             break;
         } else if (choice == 1) {
-            // 모든 재고 출력
+             // 모든 재고 출력
             InventoryController inventoryController;
             auto inventories = inventoryController.getAllInventories();
             for (const auto& inventory : inventories) {
-                std::cout << inventory.getProductID() << " - " << inventory.getQuantity() << "개" << std::endl;
+                std::cout << inventory.getProductID() << " - " << inventory.getStock() << "개" << std::endl;
             }
         } else {
             // 잘못된 입력 - 에러 플래그 설정하고 다시 루프

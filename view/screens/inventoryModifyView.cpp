@@ -1,123 +1,83 @@
+#include <iostream>
+
+#include "../../controller/ScreenController.h"
 #include "InventoryModifyView.h"
 
-
 InventoryModifyView::InventoryModifyView() {
-    invCtrl = std::make_shared<InventoryController>();
-    prodCtrl = std::make_shared<ProductController>();
+    setErrorMessages({
+        " ",
+        "잘못된 입력입니다. 다시 선택하세요.",
+    });
     setTitle("재고 증가/차감");
     setMenuItems({
-        "뒤로가기"
+        "재고 수정하기"
     });
     setMenuActions({
-        [this]() { goBack(); }
+        [this]() { 
+            // 재고 수정 기능
+            std::cout << "재고 수정 기능 준비 중...\n";
+        }
     });
 }
+
+int InventoryModifyView::getUserChoice() {
+    int choice;
+    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
     
-void InventoryModifyView::modifyInventory() {
-    std::cout << "\n=== 재고 증가/차감 ===\n";
-    
-    // 현재 재고 목록 표시
-    auto inventories = invCtrl->getAllInventories();
-    auto products = prodCtrl->getAllProducts();
-    
-    if (inventories.empty()) {
-        std::cout << "등록된 재고가 없습니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cout << "\n현재 재고 현황:\n";
-    for (const auto& inv : inventories) {
-        auto productIt = std::find_if(products.begin(), products.end(),
-            [&inv](const Product& p) { return p.getProductID() == inv.getProductID(); });
+    if (std::cin >> choice) {
+        // 입력 버퍼 비우기
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         
-        std::string productName = (productIt != products.end()) ? productIt->getName() : "알 수 없음";
-        
-        std::cout << "- " << inv.getProductID() << " (" << productName << "): " 
-                  << inv.getQuantity() << "개\n";
-    }
-    
-    std::string productID;
-    int changeAmount;
-    char operation;
-    
-    std::cout << "\n제품 ID: ";
-    std::cin >> productID;
-    
-    // 재고 존재 여부 확인
-    auto invIt = std::find_if(inventories.begin(), inventories.end(),
-        [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
-    
-    if (invIt == inventories.end()) {
-        std::cout << "해당 제품의 재고가 등록되어 있지 않습니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cout << "현재 재고량: " << invIt->getQuantity() << "개\n";
-    std::cout << "증가(+) 또는 차감(-) 선택 (+/-): ";
-    std::cin >> operation;
-    
-    if (operation != '+' && operation != '-') {
-        std::cout << "잘못된 입력입니다. +나 -를 입력해주세요.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cout << "변경할 수량: ";
-    std::cin >> changeAmount;
-    
-    if (changeAmount < 0) {
-        std::cout << "변경 수량은 0 이상이어야 합니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    int newQuantity;
-    if (operation == '+') {
-        newQuantity = invIt->getQuantity() + changeAmount;
-        if (newQuantity > invIt->getMaxStock()) {
-            std::cout << "최대 재고량(" << invIt->getMaxStock() << ")을 초과할 수 없습니다.\n";
-            std::cout << "아무 키나 눌러주세요...";
-            std::cin.ignore();
-            std::cin.get();
-            return;
+        // 유효한 입력인지 확인
+        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            return choice;
         }
     } else {
-        newQuantity = invIt->getQuantity() - changeAmount;
-        if (newQuantity < 0) {
-            std::cout << "재고량이 0 미만이 될 수 없습니다.\n";
-            std::cout << "아무 키나 눌러주세요...";
-            std::cin.ignore();
-            std::cin.get();
-            return;
-        }
+        // 잘못된 입력 처리
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     
-    // 재고 업데이트
-    Inventory updatedInventory = *invIt;
-    updatedInventory.setQuantity(newQuantity);
-    
-    if (invCtrl->updateInventory(updatedInventory)) {
-        std::cout << "재고가 성공적으로 업데이트되었습니다.\n";
-        std::cout << "변경 전: " << invIt->getQuantity() << "개 → 변경 후: " << newQuantity << "개\n";
+    // 잘못된 입력의 경우 -1 반환
+    return -1;
+}
+
+void InventoryModifyView::run() {
+    while (true) {
+        // 화면 지우기
+        clearScreen();
+
+        // 에러 메시지 표시
+        renderErrorMessages(getErrorMessages()[getShowError()]);
         
-        if (newQuantity <= invIt->getMinStock()) {
-            std::cout << "⚠️  재고 부족 경고! (최소 재고량: " << invIt->getMinStock() << "개)\n";
+        // 타이틀 표시
+        renderTitle(getTitle());
+        
+        // 메뉴 표시
+        renderMenuItems(getMenuItems());
+        
+        // 사용자 입력 받기
+        int choice = getUserChoice();
+        
+        // 선택 처리
+        if (choice == -1) {
+            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
+            setShowError(1);
+            continue;
+        } else if (choice == 0) {
+            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
+            goBack();
+            break;
+        } else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            // 생성자에서 설정한 menuActions 활용
+            const auto& actions = getMenuActions();
+            if (choice <= actions.size() && actions[choice - 1]) {
+                actions[choice - 1]();  // 설정된 액션 실행
+                
+                // 기능 실행 후 계속 루프
+                std::cout << "계속하려면 Enter를 누르세요...";
+                std::cin.get();
+            }
         }
-    } else {
-        std::cout << "재고 업데이트에 실패했습니다.\n";
     }
-    
-    std::cout << "아무 키나 눌러주세요...";
-    std::cin.ignore();
-    std::cin.get();
 } 

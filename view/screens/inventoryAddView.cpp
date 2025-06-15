@@ -1,95 +1,83 @@
+#include <iostream>
+
+#include "../../controller/ScreenController.h"
 #include "InventoryAddView.h"
 
-using namespace std;
-
 InventoryAddView::InventoryAddView() {
-    invCtrl = std::make_shared<InventoryController>();
-    prodCtrl = std::make_shared<ProductController>();
+    setErrorMessages({
+        " ",
+        "잘못된 입력입니다. 다시 선택하세요.",
+    });
     setTitle("재고 입력");
     setMenuItems({
-        "뒤로가기"
+        "새 재고 추가"
     });
     setMenuActions({
-        [this]() { goBack(); }
+        [this]() { 
+            // 새 재고 추가 기능
+            std::cout << "새 재고 추가 기능 준비 중...\n";
+        }
     });
 }
 
-void InventoryAddView::addNewInventory() {
-    std::cout << "\n=== 새 재고 입력 ===\n";
+int InventoryAddView::getUserChoice() {
+    int choice;
+    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
     
-    // 기존 제품 목록 표시
-    auto products = prodCtrl->getAllProducts();
-    std::cout << "\n등록된 제품 목록:\n";
-    for (const auto& product : products) {
-        std::cout << "- " << product.getProductID() << ": " << product.getName() << "\n";
-    }
-    
-    std::string productID;
-    int quantity, minStock, maxStock;
-    
-    std::cout << "\n제품 ID: ";
-    std::cin >> productID;
-    
-    // 제품 존재 여부 확인
-    auto productIt = std::find_if(products.begin(), products.end(),
-        [&productID](const Product& p) { return p.getProductID() == productID; });
-    
-    if (productIt == products.end()) {
-        std::cout << "존재하지 않는 제품 ID입니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    // 이미 재고가 등록된 제품인지 확인
-    auto inventories = invCtrl->getAllInventories();
-    auto invIt = std::find_if(inventories.begin(), inventories.end(),
-        [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
-    
-    if (invIt != inventories.end()) {
-        std::cout << "이미 재고가 등록된 제품입니다. 재고 수정 메뉴를 이용해주세요.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cout << "초기 재고량: ";
-    std::cin >> quantity;
-    
-    std::cout << "최소 재고량: ";
-    std::cin >> minStock;
-    
-    std::cout << "최대 재고량: ";
-    std::cin >> maxStock;
-    
-    if (quantity < 0 || minStock < 0 || maxStock < 0) {
-        std::cout << "재고량은 0 이상이어야 합니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    if (minStock > maxStock) {
-        std::cout << "최소 재고량이 최대 재고량보다 클 수 없습니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    // 새 재고 생성 및 추가
-    Inventory newInventory(0, productID, quantity, minStock, maxStock);
-    
-    if (invCtrl->addInventory(newInventory)) {
-        std::cout << "재고가 성공적으로 등록되었습니다.\n";
+    if (std::cin >> choice) {
+        // 입력 버퍼 비우기
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        
+        // 유효한 입력인지 확인
+        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            return choice;
+        }
     } else {
-        std::cout << "재고 등록에 실패했습니다.\n";
+        // 잘못된 입력 처리
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     
-    std::cout << "아무 키나 눌러주세요...";
-    std::cin.ignore();
-    std::cin.get();
+    // 잘못된 입력의 경우 -1 반환
+    return -1;
+}
+
+void InventoryAddView::run() {
+    while (true) {
+        // 화면 지우기
+        clearScreen();
+
+        // 에러 메시지 표시
+        renderErrorMessages(getErrorMessages()[getShowError()]);
+        
+        // 타이틀 표시
+        renderTitle(getTitle());
+        
+        // 메뉴 표시
+        renderMenuItems(getMenuItems());
+        
+        // 사용자 입력 받기
+        int choice = getUserChoice();
+        
+        // 선택 처리
+        if (choice == -1) {
+            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
+            setShowError(1);
+            continue;
+        } else if (choice == 0) {
+            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
+            goBack();
+            break;
+        } else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            // 생성자에서 설정한 menuActions 활용
+            const auto& actions = getMenuActions();
+            if (choice <= actions.size() && actions[choice - 1]) {
+                actions[choice - 1]();  // 설정된 액션 실행
+                
+                // 기능 실행 후 계속 루프
+                std::cout << "계속하려면 Enter를 누르세요...";
+                std::cin.get();
+            }
+        }
+    }
 } 

@@ -1,83 +1,83 @@
+#include <iostream>
+
+#include "../../controller/ScreenController.h"
 #include "ProductAddView.h"
 
-
 ProductAddView::ProductAddView() {
-    prodCtrl = std::make_shared<ProductController>();
+    setErrorMessages({
+        " ",
+        "잘못된 입력입니다. 다시 선택하세요.",
+    });
     setTitle("제품 입력");
     setMenuItems({
-        "뒤로가기"
+        "새 제품 추가"
     });
     setMenuActions({
-        [this]() { goBack(); }
+        [this]() { 
+            // 새 제품 추가 기능
+            std::cout << "새 제품 추가 기능 준비 중...\n";
+        }
     });
 }
 
-void ProductAddView::addNewProduct() {
-    std::cout << "\n=== 새 제품 입력 ===\n";
+int ProductAddView::getUserChoice() {
+    int choice;
+    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
     
-    std::string productID, name, category;
-    int price;
-    
-    std::cout << "제품 ID: ";
-    std::cin >> productID;
-    
-    // 중복 제품 ID 확인
-    auto products = prodCtrl->getAllProducts();
-    auto productIt = std::find_if(products.begin(), products.end(),
-        [&productID](const Product& p) { return p.getProductID() == productID; });
-    
-    if (productIt != products.end()) {
-        std::cout << "이미 존재하는 제품 ID입니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cin.ignore(); // 버퍼 클리어
-    std::cout << "제품명: ";
-    std::getline(std::cin, name);
-    
-    std::cout << "가격: ";
-    std::cin >> price;
-    
-    if (price < 0) {
-        std::cout << "가격은 0 이상이어야 합니다.\n";
-        std::cout << "아무 키나 눌러주세요...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    
-    std::cin.ignore(); // 버퍼 클리어
-    std::cout << "카테고리: ";
-    std::getline(std::cin, category);
-    
-    // 입력 확인
-    std::cout << "\n=== 입력 정보 확인 ===\n";
-    std::cout << "제품 ID: " << productID << "\n";
-    std::cout << "제품명: " << name << "\n";
-    std::cout << "가격: " << price << "원\n";
-    std::cout << "카테고리: " << category << "\n";
-    
-    char confirm;
-    std::cout << "\n위 정보로 제품을 등록하시겠습니까? (y/n): ";
-    std::cin >> confirm;
-    
-    if (confirm == 'y' || confirm == 'Y') {
-        // 새 제품 생성 및 추가
-        Product newProduct(0, productID, name, price, category);
+    if (std::cin >> choice) {
+        // 입력 버퍼 비우기
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         
-        if (prodCtrl->addProduct(newProduct)) {
-            std::cout << "제품이 성공적으로 등록되었습니다.\n";
-        } else {
-            std::cout << "제품 등록에 실패했습니다.\n";
+        // 유효한 입력인지 확인
+        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            return choice;
         }
     } else {
-        std::cout << "제품 등록이 취소되었습니다.\n";
+        // 잘못된 입력 처리
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     
-    std::cout << "아무 키나 눌러주세요...";
-    std::cin.ignore();
-    std::cin.get();
+    // 잘못된 입력의 경우 -1 반환
+    return -1;
+}
+
+void ProductAddView::run() {
+    while (true) {
+        // 화면 지우기
+        clearScreen();
+
+        // 에러 메시지 표시
+        renderErrorMessages(getErrorMessages()[getShowError()]);
+        
+        // 타이틀 표시
+        renderTitle(getTitle());
+        
+        // 메뉴 표시
+        renderMenuItems(getMenuItems());
+        
+        // 사용자 입력 받기
+        int choice = getUserChoice();
+        
+        // 선택 처리
+        if (choice == -1) {
+            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
+            setShowError(1);
+            continue;
+        } else if (choice == 0) {
+            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
+            goBack();
+            break;
+        } else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size())) {
+            // 생성자에서 설정한 menuActions 활용
+            const auto& actions = getMenuActions();
+            if (choice <= actions.size() && actions[choice - 1]) {
+                actions[choice - 1]();  // 설정된 액션 실행
+                
+                // 기능 실행 후 계속 루프
+                std::cout << "계속하려면 Enter를 누르세요...";
+                std::cin.get();
+            }
+        }
+    }
 } 

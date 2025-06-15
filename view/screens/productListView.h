@@ -2,19 +2,14 @@
 #define PRODUCT_LIST_VIEW_H
 
 #include "../BaseScreenView.h"
-#include "../../controller/ProductController.h"
-#include <memory>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
 
 class ProductListView : public BaseScreenView {
 private:
-    std::shared_ptr<ProductController> prodCtrl;
+    int getUserChoice();  // 사용자 입력 처리
 
 public:
     ProductListView();
-    void showProductList();
+    void run() override;  // 자체 실행 로직
 };
 
 #endif // PRODUCT_LIST_VIEW_H 

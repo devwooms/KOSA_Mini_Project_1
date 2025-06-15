@@ -10,17 +10,14 @@ InventoryController::InventoryController() {
     
     // 헤더가 없으면 초기화
     if (csvCtrl->getRecordCount() == 0) {
-        csvCtrl->initializeWithHeaders({"ID", "ProductID", "Quantity", "MinStock", "MaxStock"});
+        csvCtrl->initializeWithHeaders({"ProductID", "Stock"});
     }
 }
 
 bool InventoryController::addInventory(const Inventory& inv) {
     std::vector<std::string> record = {
-        std::to_string(getNextId()),
         inv.getProductID(),
-        std::to_string(inv.getQuantity()),
-        std::to_string(inv.getMinStock()),
-        std::to_string(inv.getMaxStock())
+        std::to_string(inv.getStock())
     };
     
     return csvCtrl->addRecord(record);
@@ -41,10 +38,10 @@ std::vector<Inventory> InventoryController::getAllInventories() {
     return inventories;
 }
 
-std::shared_ptr<Inventory> InventoryController::getInventoryById(int id) {
+std::shared_ptr<Inventory> InventoryController::getInventoryByProductID(const std::string& productID) {
     auto inventories = getAllInventories();
     auto it = std::find_if(inventories.begin(), inventories.end(),
-                          [id](const Inventory& inv) { return inv.getId() == id; });
+                          [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
     
     if (it != inventories.end()) {
         return std::make_shared<Inventory>(*it);
@@ -52,27 +49,14 @@ std::shared_ptr<Inventory> InventoryController::getInventoryById(int id) {
     return nullptr;
 }
 
-std::vector<Inventory> InventoryController::getInventoryByProductID(const std::string& productID) {
-    auto inventories = getAllInventories();
-    std::vector<Inventory> result;
-    
-    std::copy_if(inventories.begin(), inventories.end(), std::back_inserter(result),
-                [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
-    
-    return result;
-}
-
 bool InventoryController::updateInventory(const Inventory& inv) {
     auto inventories = getAllInventories();
     
     for (size_t i = 0; i < inventories.size(); ++i) {
-        if (inventories[i].getId() == inv.getId()) {
+        if (inventories[i].getProductID() == inv.getProductID()) {
             std::vector<std::string> record = {
-                std::to_string(inv.getId()),
                 inv.getProductID(),
-                std::to_string(inv.getQuantity()),
-                std::to_string(inv.getMinStock()),
-                std::to_string(inv.getMaxStock())
+                std::to_string(inv.getStock())
             };
             return csvCtrl->updateRecord(i + 1, record); // +1 for header
         }
@@ -92,70 +76,41 @@ bool InventoryController::deleteInventory(const std::string& productID) {
 }
 
 bool InventoryController::addStock(const std::string& productID, int quantity) {
-    auto inventories = getInventoryByProductID(productID);
+    auto inventory = getInventoryByProductID(productID);
     
-    if (inventories.empty()) {
+    if (!inventory) {
         return false; // 해당 제품의 재고가 없음
     }
     
-    // 첫 번째 재고 항목에 수량 추가
-    auto& firstInventory = inventories[0];
-    firstInventory.addQuantity(quantity);
-    return updateInventory(firstInventory);
+    // 재고 수량 추가
+    inventory->addStock(quantity);
+    return updateInventory(*inventory);
 }
 
 bool InventoryController::reduceStock(const std::string& productID, int quantity) {
-    auto inventories = getInventoryByProductID(productID);
+    auto inventory = getInventoryByProductID(productID);
     
-    if (inventories.empty()) {
+    if (!inventory) {
         return false;
     }
     
-    int totalQuantity = getTotalQuantityByProductID(productID);
-    if (totalQuantity < quantity) {
+    int currentStock = inventory->getStock();
+    if (currentStock < quantity) {
         return false; // 재고 부족
     }
     
     // 재고에서 차감
-    for (auto& inv : inventories) {
-        if (quantity <= 0) break;
-        
-        int currentQuantity = inv.getQuantity();
-        if (currentQuantity >= quantity) {
-            inv.reduceQuantity(quantity);
-            updateInventory(inv);
-            quantity = 0;
-        } else {
-            inv.reduceQuantity(currentQuantity);
-            updateInventory(inv);
-            quantity -= currentQuantity;
-        }
-    }
-    
-    return quantity == 0;
+    inventory->reduceStock(quantity);
+    return updateInventory(*inventory);
 }
 
-int InventoryController::getTotalQuantityByProductID(const std::string& productID) {
-    auto inventories = getInventoryByProductID(productID);
-    return std::accumulate(inventories.begin(), inventories.end(), 0,
-                            [](int sum, const Inventory& inv) { return sum + inv.getQuantity(); });
+int InventoryController::getStockByProductID(const std::string& productID) {
+    auto inventory = getInventoryByProductID(productID);
+    return inventory ? inventory->getStock() : 0;
 }
 
-int InventoryController::getNextId() {
-    auto inventories = getAllInventories();
-    int maxId = 0;
-    
-    for (const auto& inv : inventories) {
-        if (inv.getId() > maxId) {
-            maxId = inv.getId();
-        }
-    }
-    
-    return maxId + 1;
-}
-
-bool InventoryController::isInventoryExists(int id) {
-    return getInventoryById(id) != nullptr;
+bool InventoryController::isInventoryExists(const std::string& productID) {
+    return getInventoryByProductID(productID) != nullptr;
 }
 
 std::vector<Inventory> InventoryController::getLowStockItems(int threshold) {
@@ -163,7 +118,7 @@ std::vector<Inventory> InventoryController::getLowStockItems(int threshold) {
     std::vector<Inventory> lowStockItems;
     
     std::copy_if(inventories.begin(), inventories.end(), std::back_inserter(lowStockItems),
-                [threshold](const Inventory& inv) { return inv.getQuantity() <= threshold; });
+                [threshold](const Inventory& inv) { return inv.getStock() <= threshold; });
     
     return lowStockItems;
 }
@@ -196,6 +151,6 @@ void InventoryController::displayLowStockAlert(int threshold) {
     
     std::cout << "\n⚠️  재고 부족 경고 ⚠️\n";
     for (const auto& inv : lowStockItems) {
-        std::cout << "- " << inv.getProductID() << ": " << inv.getQuantity() << "개 (최소: " << inv.getMinStock() << "개)\n";
+        std::cout << "- " << inv.getProductID() << ": " << inv.getStock() << "개 (기준: " << threshold << "개 이하)\n";
     }
 } 

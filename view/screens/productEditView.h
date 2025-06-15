@@ -2,19 +2,14 @@
 #define PRODUCT_EDIT_VIEW_H
 
 #include "../BaseScreenView.h"
-#include "../../controller/ProductController.h"
-#include <memory>
-#include <iostream>
-#include <iomanip>
-#include <algorithm>
 
 class ProductEditView : public BaseScreenView {
 private:
-    std::shared_ptr<ProductController> prodCtrl;
+    int getUserChoice();  // 사용자 입력 처리
 
 public:
     ProductEditView();
-    void editProduct();
+    void run() override;  // 자체 실행 로직
 };
 
 #endif // PRODUCT_EDIT_VIEW_H 

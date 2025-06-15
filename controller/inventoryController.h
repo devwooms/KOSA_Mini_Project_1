@@ -16,19 +16,17 @@ public:
     // CRUD operations
     bool addInventory(const Inventory& inv);
     std::vector<Inventory> getAllInventories();
-    std::shared_ptr<Inventory> getInventoryById(int id);
-    std::vector<Inventory> getInventoryByProductID(const std::string& productID);
+    std::shared_ptr<Inventory> getInventoryByProductID(const std::string& productID);
     bool updateInventory(const Inventory& inv);
     bool deleteInventory(const std::string& productID);
     
     // Inventory management
     bool addStock(const std::string& productID, int quantity);
     bool reduceStock(const std::string& productID, int quantity);
-    int getTotalQuantityByProductID(const std::string& productID);
+    int getStockByProductID(const std::string& productID);
     
     // Utility methods
-    int getNextId();
-    bool isInventoryExists(int id);
+    bool isInventoryExists(const std::string& productID);
     std::vector<Inventory> getLowStockItems(int threshold = 10);
     
     // Display methods
