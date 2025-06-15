@@ -3,8 +3,9 @@
 
 #include <string>
 
-class Product {
-private:
+class Product
+{
+   private:
     int id;
     std::string productID;
     std::string name;
@@ -12,11 +13,12 @@ private:
     std::string category;
     std::string description;
 
-public:
+   public:
     // 생성자
     Product();
-    Product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description = "");
-    
+    Product(int id, const std::string& productID, const std::string& name, int price,
+            const std::string& category, const std::string& description = "");
+
     // Getters
     int getId() const { return id; }
     std::string getProductID() const { return productID; }
@@ -24,7 +26,7 @@ public:
     int getPrice() const { return price; }
     std::string getCategory() const { return category; }
     std::string getDescription() const { return description; }
-    
+
     // Setters
     void setId(int id) { this->id = id; }
     void setProductID(const std::string& productID) { this->productID = productID; }
@@ -34,4 +36,4 @@ public:
     void setDescription(const std::string& description) { this->description = description; }
 };
 
-#endif // PRODUCT_H 
+#endif  // PRODUCT_H

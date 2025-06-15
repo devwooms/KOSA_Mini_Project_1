@@ -3,13 +3,14 @@
 
 #include "../BaseScreenView.h"
 
-class CustomerSearchView : public BaseScreenView {
-private:
+class CustomerSearchView : public BaseScreenView
+{
+   private:
     int getUserChoice();  // 사용자 입력 처리
 
-public:
+   public:
     CustomerSearchView();
     void run() override;  // 자체 실행 로직
 };
 
-#endif // CUSTOMER_SEARCH_VIEW_H 
+#endif  // CUSTOMER_SEARCH_VIEW_H

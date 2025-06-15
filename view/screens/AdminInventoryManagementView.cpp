@@ -1,44 +1,38 @@
-#include "ProductManagementView.h"
+#include "AdminInventoryManagementView.h"
 
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
-#include "ProductAddView.h"
-#include "ProductDeleteView.h"
-#include "ProductEditView.h"
-#include "ProductListView.h"
+#include "AdminInventoryAddView.h"
+#include "AdminInventoryListView.h"
+#include "AdminInventoryModifyView.h"
 
-ProductManagementView::ProductManagementView()
+AdminInventoryManagementView::AdminInventoryManagementView()
 {
     setErrorMessages({
         " ",
         "잘못된 입력입니다. 다시 선택하세요.",
     });
-    setTitle("제품 관리");
-    setMenuItems({"제품 조회", "제품 입력", "제품 수정", "제품 삭제"});
+    setTitle("재고 관리");
+    setMenuItems({"재고 조회", "재고 입력", "재고 증가/차감"});
     setMenuActions({[this]()
                     {
-                        // 제품 조회 화면으로 이동
-                        goToScreen(std::make_shared<ProductListView>());
+                        // 재고 조회 화면으로 이동
+                        goToScreen(std::make_shared<AdminInventoryListView>());
                     },
                     [this]()
                     {
-                        // 제품 입력 화면으로 이동
-                        goToScreen(std::make_shared<ProductAddView>());
+                        // 재고 입력 화면으로 이동
+                        goToScreen(std::make_shared<AdminInventoryAddView>());
                     },
                     [this]()
                     {
-                        // 제품 수정 화면으로 이동
-                        goToScreen(std::make_shared<ProductEditView>());
-                    },
-                    [this]()
-                    {
-                        // 제품 삭제 화면으로 이동
-                        goToScreen(std::make_shared<ProductDeleteView>());
+                        // 재고 증가/차감 화면으로 이동
+                        goToScreen(std::make_shared<AdminInventoryModifyView>());
                     }});
 }
 
-int ProductManagementView::getUserChoice()
+int AdminInventoryManagementView::getUserChoice()
 {
     int choice;
     std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
@@ -65,7 +59,7 @@ int ProductManagementView::getUserChoice()
     return -1;
 }
 
-void ProductManagementView::run()
+void AdminInventoryManagementView::run()
 {
     while (true)
     {

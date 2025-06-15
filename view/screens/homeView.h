@@ -3,13 +3,14 @@
 
 #include "../BaseScreenView.h"
 
-class HomeView : public BaseScreenView {
-private:
+class HomeView : public BaseScreenView
+{
+   private:
     int getUserChoice();  // 사용자 입력 처리
 
-public:
+   public:
     HomeView();
     void run() override;  // 자체 실행 로직
 };
 
-#endif // HOME_VIEW_H 
+#endif  // HOME_VIEW_H

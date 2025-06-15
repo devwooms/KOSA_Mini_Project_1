@@ -1,6 +1,7 @@
 #include "controller/ScreenController.h"
 
-int main() {
+int main()
+{
     ScreenController controller;
     controller.run();
     return 0;

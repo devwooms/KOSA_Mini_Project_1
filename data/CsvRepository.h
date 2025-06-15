@@ -1,19 +1,20 @@
 #ifndef CSV_REPOSITORY_H
 #define CSV_REPOSITORY_H
 
-#include <fstream>
-#include <vector>
-#include <string>
-#include <sstream>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-class CsvRepository {
-public:
+class CsvRepository
+{
+   public:
     // 파일 존재 여부 확인
     bool checkFile(const string& filepath) const;
-    
+
     // 파일 읽기
     vector<string> readFile(const string& filepath) const;
     // 파일 쓰기

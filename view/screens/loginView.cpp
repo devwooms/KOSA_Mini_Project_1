@@ -1,18 +1,20 @@
 #include "LoginView.h"
 
-LoginView::LoginView() {
-    setErrorMessages({
-        " ",
-        "아이디 또는 비밀번호가 일치하지 않습니다.",
-        "로그인이 완료되었습니다!"
-    });
+#include "AdminMainView.h"
+
+LoginView::LoginView()
+{
+    setErrorMessages(
+        {" ", "아이디 또는 비밀번호가 일치하지 않습니다.", "로그인이 완료되었습니다!"});
     setTitle("로그인");
 }
 
-void LoginView::run() {
+void LoginView::run()
+{
     UserController userController;
     setShowError(0);
-    while (true) {
+    while (true)
+    {
         // 화면 지우기
         clearScreen();
 
@@ -23,41 +25,45 @@ void LoginView::run() {
         renderTitle(getTitle());
 
         std::cout << "로그인을 위해 다음 정보를 입력해주세요. (0: 뒤로가기)\n\n";
-        
+
         // 아이디 입력
         std::cout << "아이디: ";
         std::cin >> id;
-        if (id == "0") {
+        if (id == "0")
+        {
             goBack();
             break;
         }
-        
+
         // 비밀번호 입력
         std::cout << "비밀번호: ";
         std::cin >> password;
-        if (password == "0") {
+        if (password == "0")
+        {
             goBack();
             break;
         }
-        
+
         // 로그인 검증
         auto user = userController.findUser(id);
-        if (!user || user->getUserPasswd() != password) {
-            setShowError(1); // "아이디 또는 비밀번호가 일치하지 않습니다."
+        if (!user || user->getUserPasswd() != password)
+        {
+            setShowError(1);  // "아이디 또는 비밀번호가 일치하지 않습니다."
             continue;
         }
-        
+
         // 로그인 성공
-        setShowError(2); // "로그인이 완료되었습니다!"
-        
+        setShowError(2);  // "로그인이 완료되었습니다!"
+
         // 성공 화면 표시
         clearScreen();
         renderErrorMessages(getErrorMessages()[getShowError()]);
         renderTitle(getTitle());
-        
+
         std::cout << "환영합니다, " << user->getUserId() << "님!\n";
         std::cout << "권한: ";
-        switch (user->getPermissions()) {
+        switch (user->getPermissions())
+        {
             case User::ADMIN:
                 std::cout << "관리자";
                 break;
@@ -73,12 +79,13 @@ void LoginView::run() {
         std::cin.ignore();
         std::cin.get();
 
-        switch (user->getPermissions()) {
+        switch (user->getPermissions())
+        {
             case User::CUSTOMER:
                 goToScreenSkip(std::make_shared<CustomerView>());
                 break;
             case User::ADMIN:
-                goToScreenSkip(std::make_shared<AdminView>());
+                goToScreenSkip(std::make_shared<AdminMainView>());
                 break;
             default:
                 goBack();
@@ -86,4 +93,4 @@ void LoginView::run() {
         }
         break;
     }
-} 
+}

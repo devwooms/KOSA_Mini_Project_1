@@ -3,13 +3,14 @@
 
 #include "../BaseScreenView.h"
 
-class InventoryAddView : public BaseScreenView {
-private:
+class AdminInventoryAddView : public BaseScreenView
+{
+   private:
     int getUserChoice();  // 사용자 입력 처리
 
-public:
-    InventoryAddView();
+   public:
+    AdminInventoryAddView();
     void run() override;  // 자체 실행 로직
 };
 
-#endif // INVENTORY_ADD_VIEW_H 
+#endif  // INVENTORY_ADD_VIEW_H
