@@ -1,16 +1,12 @@
 #include "screenController.h"
 #include "../view/baseScreenView.h"
-#include "../view/screens/TestView1.h"
-#include "../view/screens/TestView2.h"
-#include "../view/screens/TestView3.h"
+#include "../view/screens/homeView.h"
 #include <iostream>
 #include <limits>
 
 screenController::screenController() {
-    // 테스트 화면들 등록
-    registerScreen("test1", std::make_shared<TestView1>());
-    registerScreen("test2", std::make_shared<TestView2>());
-    registerScreen("test3", std::make_shared<TestView3>());
+    // 화면들 등록
+    registerScreen("home", std::make_shared<homeView>());
 }
 
 int screenController::getInput(int maxChoice) {
@@ -40,8 +36,8 @@ int screenController::getInput(int maxChoice) {
 }
 
 void screenController::run() {
-    // 초기 화면으로 test1을 설정
-    navigateTo("test1");
+    // 초기 화면으로 home을 설정
+    navigateTo("home");
 
     bool running = true;
     while (running && !screenStack.empty()) {
