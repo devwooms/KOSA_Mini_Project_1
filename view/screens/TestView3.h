@@ -10,7 +10,6 @@ public:
     TestView3();
     void initialize();
     void display() override;
-    int getInput() override;
 };
 
 #endif // TEST_VIEW_3_HPP 

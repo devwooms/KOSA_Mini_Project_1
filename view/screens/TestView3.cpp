@@ -1,5 +1,5 @@
 #include "TestView3.h"
-
+#include "../viewRender.h"
 
 TestView3::TestView3() {
     initialize();
@@ -18,9 +18,5 @@ void TestView3::initialize() {
 }
 
 void TestView3::display() {
-
-}
-
-int TestView3::getInput() {
-
+    viewRender::render(getTitle(), getMenuItems());
 } 

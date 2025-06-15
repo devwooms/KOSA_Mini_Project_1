@@ -35,9 +35,8 @@ public:
     const std::vector<std::function<void()>>& getMenuActions() const;
     screenController* getController() const { return controller; }
 
-    // 화면 표시 및 입력 처리
+    // 화면 표시
     virtual void display() = 0;     // 화면 표시 (자식 클래스에서 반드시 구현)
-    virtual int getInput() = 0;     // 사용자 입력 처리 (자식 클래스에서 반드시 구현)
 
     // utility functions
     void clearScreen() const;

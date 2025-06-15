@@ -5,6 +5,7 @@
 #include <stack>
 #include <string>
 #include <unordered_map>
+#include "../view/baseScreenView.h"
 
 class baseScreenView;
 
@@ -19,6 +20,7 @@ public:
     void navigateTo(const std::string& screenName);
     void goBack();
     void registerScreen(const std::string& name, std::shared_ptr<baseScreenView> screen);
+    int getInput(int maxChoice);  // 사용자 입력 처리 메서드
 };
 
 #endif // SCREEN_CONTROLLER_H 
