@@ -30,9 +30,6 @@ public:
     void setUserPasswd(const std::string& passwd) { this->userpasswd = passwd; }
     void setPermissions(int permissions) { this->Permissions = permissions; }
     
-    // 비밀번호 확인 메서드
-    bool checkPassword(const std::string& passwd) const { return userpasswd == passwd; }
-    
     // 정적 ID 생성기
     static int generateID();
 

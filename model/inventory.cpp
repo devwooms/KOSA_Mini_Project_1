@@ -3,7 +3,7 @@
 #include <sstream>
 
 const std::string Inventory::FILENAME = "inventory.csv";
-const std::string Inventory::FOLDER_PATH = "model/data";
+const std::string Inventory::FOLDER_PATH = "data";
 
 Inventory::Inventory() : productID(""), stock(0) {}
 
