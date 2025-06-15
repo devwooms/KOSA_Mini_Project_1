@@ -12,24 +12,24 @@ CustomerView::CustomerView() {
     setTitle("고객 메뉴");
     setMenuItems({
         "제품 검색",
-        "장바구니 보기",
-        "주문 내역",
+        // "장바구니 보기",
+        // "주문 내역",
     });
     setMenuActions({
         [this]() { 
             // 제품 검색 화면으로 이동
             goToScreen(std::make_shared<CustomerSearchView>());
         },
-        [this]() { 
-            // 장바구니 화면으로 이동
-            // TODO: CartView 구현 후 연결
-            std::cout << "장바구니 기능 준비 중...\n";
-        },
-        [this]() { 
-            // 주문 내역 화면으로 이동
-            // TODO: OrderHistoryView 구현 후 연결
-            std::cout << "주문 내역 기능 준비 중...\n";
-        }
+        // [this]() { 
+        //     // 장바구니 화면으로 이동
+        //     // TODO: CartView 구현 후 연결
+        //     std::cout << "장바구니 기능 준비 중...\n";
+        // },
+        // [this]() { 
+        //     // 주문 내역 화면으로 이동
+        //     // TODO: OrderHistoryView 구현 후 연결
+        //     std::cout << "주문 내역 기능 준비 중...\n";
+        // }
     });
 }
 

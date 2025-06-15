@@ -18,7 +18,7 @@ void UserController::loadUsers() {
     for (size_t i = 1; i < lines.size(); ++i) {  // 첫 줄은 헤더이므로 건너뜀
         auto record = csvRepo->csvToVector(lines[i]);
         if (record.size() >= 4) {
-            User user(record[1], record[2], std::stoi(record[3]));
+            User user(std::stoi(record[0]), record[1], record[2], std::stoi(record[3]));
             users.push_back(user);
         }
     }
@@ -44,13 +44,14 @@ bool UserController::addUser(const std::string& userid, const std::string& passw
         return false;
     }
     
-    // 새로운 사용자 생성
-    User newUser(userid, password, User::CUSTOMER);
+    // 새로운 ID 생성 및 사용자 생성
+    int newId = findMaxUserId() + 1;
+    User newUser(newId, userid, password, User::CUSTOMER);
     users.push_back(newUser);
     
     // CSV 파일에 추가
     std::vector<std::string> record = {
-        std::to_string(findMaxUserId() + 1),
+        std::to_string(newId),
         userid,
         password,
         std::to_string(User::CUSTOMER)

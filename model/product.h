@@ -2,13 +2,9 @@
 #define PRODUCT_H
 
 #include <string>
-#include <vector>
 
 class Product {
 private:
-    static const std::string FILENAME;
-    static const std::string FOLDER_PATH;
-    
     int id;
     std::string productID;
     std::string name;
@@ -17,6 +13,7 @@ private:
     std::string description;
 
 public:
+    // 생성자
     Product();
     Product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description = "");
     
@@ -35,16 +32,6 @@ public:
     void setPrice(int price) { this->price = price; }
     void setCategory(const std::string& category) { this->category = category; }
     void setDescription(const std::string& description) { this->description = description; }
-    
-    // CSV 관련
-    std::string getFilename() const { return FILENAME; }
-    std::string getFolderPath() const { return FOLDER_PATH; }
-    
-    // 유틸리티
-    std::string toString() const;
-    std::string toCSV() const;
-    bool parseFromCSV(const std::vector<std::string>& data);
-    void displayInfo() const;
 };
 
 #endif // PRODUCT_H 
