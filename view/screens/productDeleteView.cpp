@@ -1,29 +1,13 @@
-#include "productDeleteView.h"
-#include "../viewRender.h"
+#include "ProductDeleteView.h"
 
-productDeleteView::productDeleteView() {
-    prodCtrl = std::make_shared<productController>();
-    invCtrl = std::make_shared<inventoryController>();
-    initialize();
+
+ProductDeleteView::ProductDeleteView() {
+    prodCtrl = std::make_shared<ProductController>();
+    invCtrl = std::make_shared<InventoryController>();
 }
 
-void productDeleteView::initialize() {
-    setTitle("제품 삭제");
-    setMenuItems({
-        "뒤로가기"
-    });
-    setMenuActions({
-        [this]() { getController()->goBack(); }
-    });
-}
 
-void productDeleteView::display() {
-    deleteProduct();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void productDeleteView::deleteProduct() {
+void ProductDeleteView::deleteProduct() {
     std::cout << "\n=== 제품 삭제 ===\n";
     
     auto products = prodCtrl->getAllProducts();
@@ -49,7 +33,7 @@ void productDeleteView::deleteProduct() {
     
     // 제품 존재 여부 확인
     auto productIt = std::find_if(products.begin(), products.end(),
-        [&productID](const product& p) { return p.getProductID() == productID; });
+        [&productID](const Product& p) { return p.getProductID() == productID; });
     
     if (productIt == products.end()) {
         std::cout << "존재하지 않는 제품 ID입니다.\n";
@@ -62,7 +46,7 @@ void productDeleteView::deleteProduct() {
     // 재고 존재 여부 확인
     auto inventories = invCtrl->getAllInventories();
     auto invIt = std::find_if(inventories.begin(), inventories.end(),
-        [&productID](const inventory& inv) { return inv.getProductID() == productID; });
+        [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
     
     if (invIt != inventories.end()) {
         std::cout << "⚠️  경고: 이 제품에 대한 재고가 존재합니다.\n";

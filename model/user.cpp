@@ -1,4 +1,4 @@
-#include "user.h"
+#include "User.h"
 
 // 정적 멤버 변수 초기화
 int User::nextID = 1;

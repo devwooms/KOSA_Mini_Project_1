@@ -4,16 +4,18 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "../model/user.h"
+#include "../model/User.h"
 
-class csvController {
+class CsvController {
 private:
+    // 파일이름
     std::string filename;
+    // 구분자
     const char delimiter;
 
 public:
     // 생성자
-    csvController(const std::string& filename, char delimiter = ',');
+    CsvController(const std::string& filename, char delimiter = ',');
 
     // Create - 새로운 데이터 추가
     bool addRecord(const std::vector<std::string>& record);
@@ -31,7 +33,7 @@ public:
     // 유틸리티 메서드
     bool isFileExists() const;
     int getRecordCount() const;
-    bool createFile() const;
+    bool ensureFileExists() const;
     bool initializeWithHeaders(const std::vector<std::string>& headers);
 
 private:

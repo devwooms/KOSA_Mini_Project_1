@@ -1,21 +1,19 @@
 #ifndef PRODUCT_ADD_VIEW_H
 #define PRODUCT_ADD_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include "../../controller/productController.h"
+#include "../BaseScreenView.h"
+#include "../../controller/ProductController.h"
 #include <memory>
 #include <iostream>
-#include <string>
+#include <iomanip>
+#include <algorithm>
 
-class productAddView : public baseScreenView {
+class ProductAddView : public BaseScreenView {
 private:
-    std::shared_ptr<productController> prodCtrl;
+    std::shared_ptr<ProductController> prodCtrl;
 
 public:
-    productAddView();
-    void initialize() override;
-    void display() override;
+    ProductAddView();
     void addNewProduct();
 };
 

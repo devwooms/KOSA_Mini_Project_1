@@ -1,12 +1,12 @@
-#include "inventoryController.h"
+#include "InventoryController.h"
 #include <iostream>
 #include <algorithm>
 #include <numeric>
 
-inventoryController::inventoryController() {
-    inventory tempInventory;
+InventoryController::InventoryController() {
+    Inventory tempInventory;
     std::string filepath = tempInventory.getFolderPath() + "/" + tempInventory.getFilename();
-    csvCtrl = std::make_shared<csvController>(filepath);
+    csvCtrl = std::make_shared<CsvController>(filepath);
     
     // 헤더가 없으면 초기화
     if (csvCtrl->getRecordCount() == 0) {
@@ -14,7 +14,7 @@ inventoryController::inventoryController() {
     }
 }
 
-bool inventoryController::addInventory(const inventory& inv) {
+bool InventoryController::addInventory(const Inventory& inv) {
     std::vector<std::string> record = {
         std::to_string(getNextId()),
         inv.getProductID(),
@@ -26,13 +26,13 @@ bool inventoryController::addInventory(const inventory& inv) {
     return csvCtrl->addRecord(record);
 }
 
-std::vector<inventory> inventoryController::getAllInventories() {
-    std::vector<inventory> inventories;
+std::vector<Inventory> InventoryController::getAllInventories() {
+    std::vector<Inventory> inventories;
     auto records = csvCtrl->readAllRecords();
     
     // 첫 번째 행이 헤더인 경우 건너뛰기
     for (size_t i = 1; i < records.size(); ++i) {
-        inventory inv;
+        Inventory inv;
         if (inv.parseFromCSV(records[i])) {
             inventories.push_back(inv);
         }
@@ -41,28 +41,28 @@ std::vector<inventory> inventoryController::getAllInventories() {
     return inventories;
 }
 
-std::shared_ptr<inventory> inventoryController::getInventoryById(int id) {
+std::shared_ptr<Inventory> InventoryController::getInventoryById(int id) {
     auto inventories = getAllInventories();
     auto it = std::find_if(inventories.begin(), inventories.end(),
-                          [id](const inventory& inv) { return inv.getId() == id; });
+                          [id](const Inventory& inv) { return inv.getId() == id; });
     
     if (it != inventories.end()) {
-        return std::make_shared<inventory>(*it);
+        return std::make_shared<Inventory>(*it);
     }
     return nullptr;
 }
 
-std::vector<inventory> inventoryController::getInventoryByProductID(const std::string& productID) {
+std::vector<Inventory> InventoryController::getInventoryByProductID(const std::string& productID) {
     auto inventories = getAllInventories();
-    std::vector<inventory> result;
+    std::vector<Inventory> result;
     
     std::copy_if(inventories.begin(), inventories.end(), std::back_inserter(result),
-                [&productID](const inventory& inv) { return inv.getProductID() == productID; });
+                [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
     
     return result;
 }
 
-bool inventoryController::updateInventory(const inventory& inv) {
+bool InventoryController::updateInventory(const Inventory& inv) {
     auto inventories = getAllInventories();
     
     for (size_t i = 0; i < inventories.size(); ++i) {
@@ -80,7 +80,7 @@ bool inventoryController::updateInventory(const inventory& inv) {
     return false;
 }
 
-bool inventoryController::deleteInventory(const std::string& productID) {
+bool InventoryController::deleteInventory(const std::string& productID) {
     auto inventories = getAllInventories();
     
     for (size_t i = 0; i < inventories.size(); ++i) {
@@ -91,7 +91,7 @@ bool inventoryController::deleteInventory(const std::string& productID) {
     return false;
 }
 
-bool inventoryController::addStock(const std::string& productID, int quantity) {
+bool InventoryController::addStock(const std::string& productID, int quantity) {
     auto inventories = getInventoryByProductID(productID);
     
     if (inventories.empty()) {
@@ -104,7 +104,7 @@ bool inventoryController::addStock(const std::string& productID, int quantity) {
     return updateInventory(firstInventory);
 }
 
-bool inventoryController::reduceStock(const std::string& productID, int quantity) {
+bool InventoryController::reduceStock(const std::string& productID, int quantity) {
     auto inventories = getInventoryByProductID(productID);
     
     if (inventories.empty()) {
@@ -135,13 +135,13 @@ bool inventoryController::reduceStock(const std::string& productID, int quantity
     return quantity == 0;
 }
 
-int inventoryController::getTotalQuantityByProductID(const std::string& productID) {
+int InventoryController::getTotalQuantityByProductID(const std::string& productID) {
     auto inventories = getInventoryByProductID(productID);
     return std::accumulate(inventories.begin(), inventories.end(), 0,
-                          [](int sum, const inventory& inv) { return sum + inv.getQuantity(); });
+                            [](int sum, const Inventory& inv) { return sum + inv.getQuantity(); });
 }
 
-int inventoryController::getNextId() {
+int InventoryController::getNextId() {
     auto inventories = getAllInventories();
     int maxId = 0;
     
@@ -154,21 +154,21 @@ int inventoryController::getNextId() {
     return maxId + 1;
 }
 
-bool inventoryController::isInventoryExists(int id) {
+bool InventoryController::isInventoryExists(int id) {
     return getInventoryById(id) != nullptr;
 }
 
-std::vector<inventory> inventoryController::getLowStockItems(int threshold) {
+std::vector<Inventory> InventoryController::getLowStockItems(int threshold) {
     auto inventories = getAllInventories();
-    std::vector<inventory> lowStockItems;
+    std::vector<Inventory> lowStockItems;
     
     std::copy_if(inventories.begin(), inventories.end(), std::back_inserter(lowStockItems),
-                [threshold](const inventory& inv) { return inv.getQuantity() <= threshold; });
+                [threshold](const Inventory& inv) { return inv.getQuantity() <= threshold; });
     
     return lowStockItems;
 }
 
-void inventoryController::displayAllInventory() {
+void InventoryController::displayAllInventory() {
     auto inventories = getAllInventories();
     
     if (inventories.empty()) {
@@ -182,11 +182,11 @@ void inventoryController::displayAllInventory() {
     }
 }
 
-void inventoryController::displayInventory(const inventory& inv) {
+void InventoryController::displayInventory(const Inventory& inv) {
     inv.displayInfo();
 }
 
-void inventoryController::displayLowStockAlert(int threshold) {
+void InventoryController::displayLowStockAlert(int threshold) {
     auto lowStockItems = getLowStockItems(threshold);
     
     if (lowStockItems.empty()) {

@@ -1,21 +1,19 @@
 #ifndef PRODUCT_LIST_VIEW_H
 #define PRODUCT_LIST_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include "../../controller/productController.h"
+#include "../BaseScreenView.h"
+#include "../../controller/ProductController.h"
 #include <memory>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
-class productListView : public baseScreenView {
+class ProductListView : public BaseScreenView {
 private:
-    std::shared_ptr<productController> prodCtrl;
+    std::shared_ptr<ProductController> prodCtrl;
 
 public:
-    productListView();
-    void initialize() override;
-    void display() override;
+    ProductListView();
     void showProductList();
 };
 

@@ -1,23 +1,21 @@
 #ifndef PRODUCT_DELETE_VIEW_H
 #define PRODUCT_DELETE_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include "../../controller/productController.h"
-#include "../../controller/inventoryController.h"
+#include "../BaseScreenView.h"
+#include "../../controller/ProductController.h"
+#include "../../controller/InventoryController.h"
 #include <memory>
 #include <iostream>
-#include <string>
+#include <iomanip>
+#include <algorithm>
 
-class productDeleteView : public baseScreenView {
+class ProductDeleteView : public BaseScreenView {
 private:
-    std::shared_ptr<productController> prodCtrl;
-    std::shared_ptr<inventoryController> invCtrl;
+    std::shared_ptr<ProductController> prodCtrl;
+    std::shared_ptr<InventoryController> invCtrl;
 
 public:
-    productDeleteView();
-    void initialize() override;
-    void display() override;
+    ProductDeleteView();
     void deleteProduct();
 };
 

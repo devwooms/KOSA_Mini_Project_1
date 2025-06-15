@@ -1,11 +1,11 @@
-#include "productController.h"
+#include "ProductController.h"
 #include <iostream>
 #include <algorithm>
 
-productController::productController() {
-    product tempProduct;
+ProductController::ProductController() {
+    Product tempProduct;
     std::string filepath = tempProduct.getFolderPath() + "/" + tempProduct.getFilename();
-    csvCtrl = std::make_shared<csvController>(filepath);
+    csvCtrl = std::make_shared<CsvController>(filepath);
     
     // 헤더가 없으면 초기화
     if (csvCtrl->getRecordCount() == 0) {
@@ -13,7 +13,7 @@ productController::productController() {
     }
 }
 
-bool productController::addProduct(const product& prod) {
+bool ProductController::addProduct(const Product& prod) {
     std::vector<std::string> record = {
         std::to_string(getNextId()),
         prod.getProductID(),
@@ -25,13 +25,13 @@ bool productController::addProduct(const product& prod) {
     return csvCtrl->addRecord(record);
 }
 
-std::vector<product> productController::getAllProducts() {
-    std::vector<product> products;
+std::vector<Product> ProductController::getAllProducts() {
+    std::vector<Product> products;
     auto records = csvCtrl->readAllRecords();
     
     // 첫 번째 행이 헤더인 경우 건너뛰기
     for (size_t i = 1; i < records.size(); ++i) {
-        product prod;
+        Product prod;
         if (prod.parseFromCSV(records[i])) {
             products.push_back(prod);
         }
@@ -40,29 +40,29 @@ std::vector<product> productController::getAllProducts() {
     return products;
 }
 
-std::shared_ptr<product> productController::getProductById(int id) {
+std::shared_ptr<Product> ProductController::getProductById(int id) {
     auto products = getAllProducts();
     auto it = std::find_if(products.begin(), products.end(),
-                          [id](const product& p) { return p.getId() == id; });
+                          [id](const Product& p) { return p.getId() == id; });
     
     if (it != products.end()) {
-        return std::make_shared<product>(*it);
+        return std::make_shared<Product>(*it);
     }
     return nullptr;
 }
 
-std::shared_ptr<product> productController::getProductByName(const std::string& name) {
+std::shared_ptr<Product> ProductController::getProductByName(const std::string& name) {
     auto products = getAllProducts();
     auto it = std::find_if(products.begin(), products.end(),
-                          [&name](const product& p) { return p.getName() == name; });
+                          [&name](const Product& p) { return p.getName() == name; });
     
     if (it != products.end()) {
-        return std::make_shared<product>(*it);
+        return std::make_shared<Product>(*it);
     }
     return nullptr;
 }
 
-bool productController::updateProduct(const product& prod) {
+bool ProductController::updateProduct(const Product& prod) {
     auto products = getAllProducts();
     
     for (size_t i = 0; i < products.size(); ++i) {
@@ -80,7 +80,7 @@ bool productController::updateProduct(const product& prod) {
     return false;
 }
 
-bool productController::deleteProduct(const std::string& productID) {
+bool ProductController::deleteProduct(const std::string& productID) {
     auto products = getAllProducts();
     
     for (size_t i = 0; i < products.size(); ++i) {
@@ -91,7 +91,7 @@ bool productController::deleteProduct(const std::string& productID) {
     return false;
 }
 
-int productController::getNextId() {
+int ProductController::getNextId() {
     auto products = getAllProducts();
     int maxId = 0;
     
@@ -104,25 +104,25 @@ int productController::getNextId() {
     return maxId + 1;
 }
 
-bool productController::isProductExists(int id) {
+bool ProductController::isProductExists(int id) {
     return getProductById(id) != nullptr;
 }
 
-bool productController::isProductNameExists(const std::string& name) {
+bool ProductController::isProductNameExists(const std::string& name) {
     return getProductByName(name) != nullptr;
 }
 
-std::vector<product> productController::getProductsByCategory(const std::string& category) {
+std::vector<Product> ProductController::getProductsByCategory(const std::string& category) {
     auto products = getAllProducts();
-    std::vector<product> result;
+    std::vector<Product> result;
     
     std::copy_if(products.begin(), products.end(), std::back_inserter(result),
-                [&category](const product& p) { return p.getCategory() == category; });
+                [&category](const Product& p) { return p.getCategory() == category; });
     
     return result;
 }
 
-void productController::displayAllProducts() {
+void ProductController::displayAllProducts() {
     auto products = getAllProducts();
     
     if (products.empty()) {
@@ -136,6 +136,6 @@ void productController::displayAllProducts() {
     }
 }
 
-void productController::displayProduct(const product& prod) {
+void ProductController::displayProduct(const Product& prod) {
     prod.displayInfo();
 } 

@@ -1,29 +1,19 @@
-#include "inventoryListView.h"
-#include "../viewRender.h"
+#include "InventoryListView.h"
+using namespace std;
 
-inventoryListView::inventoryListView() {
-    invCtrl = std::make_shared<inventoryController>();
-    prodCtrl = std::make_shared<productController>();
-    initialize();
-}
-
-void inventoryListView::initialize() {
+InventoryListView::InventoryListView() {
+    invCtrl = std::make_shared<InventoryController>();
+    prodCtrl = std::make_shared<ProductController>();
     setTitle("재고 조회");
     setMenuItems({
         "뒤로가기"
     });
     setMenuActions({
-        [this]() { getController()->goBack(); }
+        [this]() { goBack(); }
     });
 }
 
-void inventoryListView::display() {
-    showInventoryList();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void inventoryListView::showInventoryList() {
+void InventoryListView::showInventoryList() {
     std::cout << "\n=== 재고 현황 ===\n";
     std::cout << std::left << std::setw(10) << "제품ID" 
               << std::setw(15) << "제품명" 
@@ -39,7 +29,7 @@ void inventoryListView::showInventoryList() {
     for (const auto& inv : inventories) {
         // 해당 제품 정보 찾기
         auto productIt = std::find_if(products.begin(), products.end(),
-            [&inv](const product& p) { return p.getProductID() == inv.getProductID(); });
+            [&inv](const Product& p) { return p.getProductID() == inv.getProductID(); });
         
         std::string productName = (productIt != products.end()) ? productIt->getName() : "알 수 없음";
         int price = (productIt != products.end()) ? productIt->getPrice() : 0;

@@ -1,7 +1,7 @@
-#include "controller/screenController.h"
+#include "controller/ScreenController.h"
 
 int main() {
-    screenController controller;
+    ScreenController controller;
     controller.run();
     return 0;
 }

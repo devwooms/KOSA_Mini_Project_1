@@ -1,17 +1,11 @@
 #ifndef ADMIN_VIEW_H
 #define ADMIN_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include <memory>
-#include <iostream>
-#include <limits>
+#include "../BaseScreenView.h"
 
-class adminView : public baseScreenView {
+class AdminView : public BaseScreenView {
 public:
-    adminView();
-    void initialize() override;
-    void display() override;
+    AdminView();
 };
 
 #endif // ADMIN_VIEW_H 

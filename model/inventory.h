@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-class inventory {
+class Inventory {
 private:
     static const std::string FILENAME;
     static const std::string FOLDER_PATH;
@@ -16,8 +16,8 @@ private:
     int maxStock;
 
 public:
-    inventory();
-    inventory(int id, const std::string& productID, int quantity, int minStock, int maxStock);
+    Inventory();
+    Inventory(int id, const std::string& productID, int quantity, int minStock, int maxStock);
     
     // Getters
     int getId() const { return id; }

@@ -1,24 +1,24 @@
 #ifndef INVENTORY_CONTROLLER_H
 #define INVENTORY_CONTROLLER_H
 
-#include "../model/inventory.h"
-#include "csvController.h"
+#include "../model/Inventory.h"
+#include "CsvController.h"
 #include <vector>
 #include <memory>
 
-class inventoryController {
+class InventoryController {
 private:
-    std::shared_ptr<csvController> csvCtrl;
+    std::shared_ptr<CsvController> csvCtrl;
     
 public:
-    inventoryController();
+    InventoryController();
     
     // CRUD operations
-    bool addInventory(const inventory& inv);
-    std::vector<inventory> getAllInventories();
-    std::shared_ptr<inventory> getInventoryById(int id);
-    std::vector<inventory> getInventoryByProductID(const std::string& productID);
-    bool updateInventory(const inventory& inv);
+    bool addInventory(const Inventory& inv);
+    std::vector<Inventory> getAllInventories();
+    std::shared_ptr<Inventory> getInventoryById(int id);
+    std::vector<Inventory> getInventoryByProductID(const std::string& productID);
+    bool updateInventory(const Inventory& inv);
     bool deleteInventory(const std::string& productID);
     
     // Inventory management
@@ -29,11 +29,11 @@ public:
     // Utility methods
     int getNextId();
     bool isInventoryExists(int id);
-    std::vector<inventory> getLowStockItems(int threshold = 10);
+    std::vector<Inventory> getLowStockItems(int threshold = 10);
     
     // Display methods
     void displayAllInventory();
-    void displayInventory(const inventory& inv);
+    void displayInventory(const Inventory& inv);
     void displayLowStockAlert(int threshold = 10);
 };
 

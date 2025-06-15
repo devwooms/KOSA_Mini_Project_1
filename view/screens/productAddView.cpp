@@ -1,28 +1,18 @@
-#include "productAddView.h"
-#include "../viewRender.h"
+#include "ProductAddView.h"
 
-productAddView::productAddView() {
-    prodCtrl = std::make_shared<productController>();
-    initialize();
-}
 
-void productAddView::initialize() {
+ProductAddView::ProductAddView() {
+    prodCtrl = std::make_shared<ProductController>();
     setTitle("제품 입력");
     setMenuItems({
         "뒤로가기"
     });
     setMenuActions({
-        [this]() { getController()->goBack(); }
+        [this]() { goBack(); }
     });
 }
 
-void productAddView::display() {
-    addNewProduct();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void productAddView::addNewProduct() {
+void ProductAddView::addNewProduct() {
     std::cout << "\n=== 새 제품 입력 ===\n";
     
     std::string productID, name, category;
@@ -34,7 +24,7 @@ void productAddView::addNewProduct() {
     // 중복 제품 ID 확인
     auto products = prodCtrl->getAllProducts();
     auto productIt = std::find_if(products.begin(), products.end(),
-        [&productID](const product& p) { return p.getProductID() == productID; });
+        [&productID](const Product& p) { return p.getProductID() == productID; });
     
     if (productIt != products.end()) {
         std::cout << "이미 존재하는 제품 ID입니다.\n";
@@ -76,7 +66,7 @@ void productAddView::addNewProduct() {
     
     if (confirm == 'y' || confirm == 'Y') {
         // 새 제품 생성 및 추가
-        product newProduct(0, productID, name, price, category);
+        Product newProduct(0, productID, name, price, category);
         
         if (prodCtrl->addProduct(newProduct)) {
             std::cout << "제품이 성공적으로 등록되었습니다.\n";

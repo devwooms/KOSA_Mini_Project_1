@@ -1,17 +1,11 @@
 #ifndef INVENTORY_MANAGEMENT_VIEW_H
 #define INVENTORY_MANAGEMENT_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include <memory>
-#include <iostream>
-#include <limits>
+#include "../BaseScreenView.h"
 
-class inventoryManagementView : public baseScreenView {
+class InventoryManagementView : public BaseScreenView {
 public:
-    inventoryManagementView();
-    void initialize() override;
-    void display() override;
+    InventoryManagementView();
 };
 
 #endif // INVENTORY_MANAGEMENT_VIEW_H 

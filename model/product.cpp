@@ -1,16 +1,16 @@
-#include "product.h"
+#include "Product.h"
 #include <iostream>
 #include <sstream>
 
-const std::string product::FILENAME = "products.csv";
-const std::string product::FOLDER_PATH = "model/data";
+const std::string Product::FILENAME = "products.csv";
+const std::string Product::FOLDER_PATH = "model/data";
 
-product::product() : id(0), productID(""), name(""), price(0), category(""), description("") {}
+Product::Product() : id(0), productID(""), name(""), price(0), category(""), description("") {}
 
-product::product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description)
+Product::Product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description)
     : id(id), productID(productID), name(name), price(price), category(category), description(description) {}
 
-std::string product::toString() const {
+std::string Product::toString() const {
     std::ostringstream oss;
     oss << "ID: " << id << ", 제품ID: " << productID << ", 이름: " << name << ", 가격: " << price 
         << "원, 카테고리: " << category;
@@ -20,13 +20,13 @@ std::string product::toString() const {
     return oss.str();
 }
 
-std::string product::toCSV() const {
+std::string Product::toCSV() const {
     std::ostringstream oss;
     oss << id << "," << productID << "," << name << "," << price << "," << category;
     return oss.str();
 }
 
-bool product::parseFromCSV(const std::vector<std::string>& data) {
+bool Product::parseFromCSV(const std::vector<std::string>& data) {
     if (data.size() < 5) return false;
     
     try {
@@ -41,6 +41,6 @@ bool product::parseFromCSV(const std::vector<std::string>& data) {
     }
 }
 
-void product::displayInfo() const {
+void Product::displayInfo() const {
     std::cout << toString() << std::endl;
 } 

@@ -1,29 +1,29 @@
-#include "inventory.h"
+#include "Inventory.h"
 #include <iostream>
 #include <sstream>
 
-const std::string inventory::FILENAME = "inventory.csv";
-const std::string inventory::FOLDER_PATH = "model/data";
+const std::string Inventory::FILENAME = "inventory.csv";
+const std::string Inventory::FOLDER_PATH = "model/data";
 
-inventory::inventory() : id(0), productID(""), quantity(0), minStock(0), maxStock(0) {}
+Inventory::Inventory() : id(0), productID(""), quantity(0), minStock(0), maxStock(0) {}
 
-inventory::inventory(int id, const std::string& productID, int quantity, int minStock, int maxStock)
+Inventory::Inventory(int id, const std::string& productID, int quantity, int minStock, int maxStock)
     : id(id), productID(productID), quantity(quantity), minStock(minStock), maxStock(maxStock) {}
 
-std::string inventory::toString() const {
+std::string Inventory::toString() const {
     std::ostringstream oss;
     oss << "ID: " << id << ", 제품ID: " << productID << ", 수량: " << quantity 
         << ", 최소재고: " << minStock << ", 최대재고: " << maxStock;
     return oss.str();
 }
 
-std::string inventory::toCSV() const {
+std::string Inventory::toCSV() const {
     std::ostringstream oss;
     oss << id << "," << productID << "," << quantity << "," << minStock << "," << maxStock;
     return oss.str();
 }
 
-bool inventory::parseFromCSV(const std::vector<std::string>& data) {
+bool Inventory::parseFromCSV(const std::vector<std::string>& data) {
     if (data.size() < 5) return false;
     
     try {
@@ -38,17 +38,17 @@ bool inventory::parseFromCSV(const std::vector<std::string>& data) {
     }
 }
 
-void inventory::displayInfo() const {
+void Inventory::displayInfo() const {
     std::cout << toString() << std::endl;
 }
 
-bool inventory::addQuantity(int amount) {
+bool Inventory::addQuantity(int amount) {
     if (amount < 0) return false;
     quantity += amount;
     return true;
 }
 
-bool inventory::reduceQuantity(int amount) {
+bool Inventory::reduceQuantity(int amount) {
     if (amount < 0 || amount > quantity) return false;
     quantity -= amount;
     return true;

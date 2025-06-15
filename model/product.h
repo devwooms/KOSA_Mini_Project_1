@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-class product {
+class Product {
 private:
     static const std::string FILENAME;
     static const std::string FOLDER_PATH;
@@ -17,8 +17,8 @@ private:
     std::string description;
 
 public:
-    product();
-    product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description = "");
+    Product();
+    Product(int id, const std::string& productID, const std::string& name, int price, const std::string& category, const std::string& description = "");
     
     // Getters
     int getId() const { return id; }

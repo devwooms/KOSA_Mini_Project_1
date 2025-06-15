@@ -1,23 +1,21 @@
 #ifndef INVENTORY_LIST_VIEW_H
 #define INVENTORY_LIST_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include "../../controller/inventoryController.h"
-#include "../../controller/productController.h"
+#include "../BaseScreenView.h"
+#include "../../controller/InventoryController.h"
+#include "../../controller/ProductController.h"
 #include <memory>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
-class inventoryListView : public baseScreenView {
+class InventoryListView : public BaseScreenView {
 private:
-    std::shared_ptr<inventoryController> invCtrl;
-    std::shared_ptr<productController> prodCtrl;
+    std::shared_ptr<InventoryController> invCtrl;
+    std::shared_ptr<ProductController> prodCtrl;
 
 public:
-    inventoryListView();
-    void initialize() override;
-    void display() override;
+    InventoryListView();
     void showInventoryList();
 };
 

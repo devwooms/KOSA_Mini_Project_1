@@ -1,17 +1,11 @@
 #ifndef PRODUCT_MANAGEMENT_VIEW_H
 #define PRODUCT_MANAGEMENT_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include <memory>
-#include <iostream>
-#include <limits>
+#include "../BaseScreenView.h"
 
-class productManagementView : public baseScreenView {
+class ProductManagementView : public BaseScreenView {
 public:
-    productManagementView();
-    void initialize() override;
-    void display() override;
+    ProductManagementView();
 };
 
 #endif // PRODUCT_MANAGEMENT_VIEW_H 

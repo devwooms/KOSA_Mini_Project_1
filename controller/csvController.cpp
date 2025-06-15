@@ -1,9 +1,9 @@
-#include "csvController.h"
+#include "CsvController.h"
 #include <sstream>
 #include <algorithm>
 #include <filesystem>
 
-csvController::csvController(const std::string& filename, char delimiter)
+CsvController::CsvController(const std::string& filename, char delimiter)
     : filename(filename), delimiter(delimiter) {
     // 파일 경로에서 디렉토리 부분 추출
     std::filesystem::path filePath(filename);
@@ -16,12 +16,12 @@ csvController::csvController(const std::string& filename, char delimiter)
     
     // 파일이 없으면 생성
     if (!isFileExists()) {
-        createFile();
+        ensureFileExists();
     }
 }
 
 // Create operations
-bool csvController::addRecord(const std::vector<std::string>& record) {
+bool CsvController::addRecord(const std::vector<std::string>& record) {
     std::ofstream file(filename, std::ios::app);
     if (!file) return false;
     
@@ -30,7 +30,7 @@ bool csvController::addRecord(const std::vector<std::string>& record) {
 }
 
 // Read operations
-std::vector<std::vector<std::string>> csvController::readAllRecords() {
+std::vector<std::vector<std::string>> CsvController::readAllRecords() {
     std::vector<std::vector<std::string>> records;
     std::ifstream file(filename);
     if (!file) return records;
@@ -44,7 +44,7 @@ std::vector<std::vector<std::string>> csvController::readAllRecords() {
     return records;
 }
 
-std::vector<std::string> csvController::readRecord(int lineNumber) {
+std::vector<std::string> CsvController::readRecord(int lineNumber) {
     std::vector<std::string> record;
     std::ifstream file(filename);
     if (!file) return record;
@@ -62,7 +62,7 @@ std::vector<std::string> csvController::readRecord(int lineNumber) {
 }
 
 // Update operations
-bool csvController::updateRecord(int lineNumber, const std::vector<std::string>& newRecord) {
+bool CsvController::updateRecord(int lineNumber, const std::vector<std::string>& newRecord) {
     auto records = readAllRecords();
     if (lineNumber >= records.size()) return false;
     
@@ -71,7 +71,7 @@ bool csvController::updateRecord(int lineNumber, const std::vector<std::string>&
 }
 
 // Delete operations
-bool csvController::deleteRecord(int lineNumber) {
+bool CsvController::deleteRecord(int lineNumber) {
     auto records = readAllRecords();
     if (lineNumber >= records.size()) return false;
     
@@ -80,12 +80,12 @@ bool csvController::deleteRecord(int lineNumber) {
 }
 
 // Utility methods
-bool csvController::isFileExists() const {
+bool CsvController::isFileExists() const {
     std::ifstream file(filename);
     return file.good();
 }
 
-int csvController::getRecordCount() const {
+int CsvController::getRecordCount() const {
     std::ifstream file(filename);
     if (!file) return 0;
 
@@ -97,12 +97,12 @@ int csvController::getRecordCount() const {
     return count;
 }
 
-bool csvController::createFile() const {
+bool CsvController::ensureFileExists() const {
     std::ofstream file(filename);
     return file.good();
 }
 
-bool csvController::initializeWithHeaders(const std::vector<std::string>& headers) {
+bool CsvController::initializeWithHeaders(const std::vector<std::string>& headers) {
     if (!isFileExists() || getRecordCount() == 0) {
         std::ofstream file(filename);
         if (!file) return false;
@@ -113,7 +113,7 @@ bool csvController::initializeWithHeaders(const std::vector<std::string>& header
 }
 
 // Private helper methods
-std::vector<std::string> csvController::splitString(const std::string& str) const {
+std::vector<std::string> CsvController::splitString(const std::string& str) const {
     std::vector<std::string> parts;
     std::stringstream ss(str);
     std::string part;
@@ -124,7 +124,7 @@ std::vector<std::string> csvController::splitString(const std::string& str) cons
     return parts;
 }
 
-std::string csvController::joinString(const std::vector<std::string>& parts) const {
+std::string CsvController::joinString(const std::vector<std::string>& parts) const {
     if (parts.empty()) return "";
     
     std::stringstream ss;
@@ -135,7 +135,7 @@ std::string csvController::joinString(const std::vector<std::string>& parts) con
     return ss.str();
 }
 
-bool csvController::writeAllRecords(const std::vector<std::vector<std::string>>& records) {
+bool CsvController::writeAllRecords(const std::vector<std::vector<std::string>>& records) {
     std::ofstream file(filename);
     if (!file) return false;
     

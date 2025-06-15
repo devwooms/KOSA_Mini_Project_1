@@ -4,24 +4,28 @@
 #include <memory>
 #include <stack>
 #include <string>
-#include <unordered_map>
-#include "../view/baseScreenView.h"
+#include "../view/BaseScreenView.h"
 
-class baseScreenView;
-
-class screenController {
+class ScreenController {
 private:
-    std::stack<std::shared_ptr<baseScreenView>> screenStack;
-    std::unordered_map<std::string, std::shared_ptr<baseScreenView>> screens;
+    std::stack<std::shared_ptr<BaseScreenView>> screenStack;
 
 public:
-    screenController();
+    ScreenController() = default;
+    
+    // 스택 관리 메서드들
+    void pushScreen(std::shared_ptr<BaseScreenView> screen);
+    void popScreen();
+    void replaceScreen(std::shared_ptr<BaseScreenView> screen);
+    void clearStack();
+    
+    // 현재 화면 실행
     void run();
-    void navigateTo(const std::string& screenName);
-    void navigateToSkip(const std::string& screenName);  // 이전 화면을 스택에서 제거하고 새 화면으로 이동
-    void goBack();
-    void registerScreen(const std::string& name, std::shared_ptr<baseScreenView> screen);
-    int getInput(int maxChoice);  // 사용자 입력 처리 메서드
+    
+    // 접근자
+    std::shared_ptr<BaseScreenView> getCurrentScreen() const;
+    bool hasScreens() const;
+    size_t getStackSize() const;
 };
 
 #endif // SCREEN_CONTROLLER_H 

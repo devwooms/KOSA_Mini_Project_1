@@ -1,17 +1,11 @@
 #ifndef HOME_VIEW_H
 #define HOME_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include <memory>
-#include <iostream>
-#include <limits>
+#include "../BaseScreenView.h"
 
-class homeView : public baseScreenView {
+class HomeView : public BaseScreenView {
 public:
-    homeView();
-    void initialize() override;
-    void display() override;
+    HomeView();
 };
 
 #endif // HOME_VIEW_H 

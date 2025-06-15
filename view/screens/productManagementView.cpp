@@ -1,11 +1,6 @@
-#include "productManagementView.h"
-#include "../viewRender.h"
+#include "ProductManagementView.h"
 
-productManagementView::productManagementView() {
-    initialize();
-}
-
-void productManagementView::initialize() {
+ProductManagementView::ProductManagementView() {
     setTitle("제품 관리");
     setMenuItems({
         "제품 조회",
@@ -14,13 +9,6 @@ void productManagementView::initialize() {
         "제품 삭제"
     });
     setMenuActions({
-        [this]() { getController()->navigateTo("product_list"); },
-        [this]() { getController()->navigateTo("product_add"); },
-        [this]() { getController()->navigateTo("product_edit"); },
-        [this]() { getController()->navigateTo("product_delete"); }
-    });
-}
 
-void productManagementView::display() {
-    viewRender::render(getTitle(), getMenuItems());
+    });
 } 

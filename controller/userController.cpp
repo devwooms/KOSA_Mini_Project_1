@@ -1,18 +1,18 @@
-#include "userController.h"
+#include "UserController.h"
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 
-const std::string userController::CSV_PATH = "../model/data/user.csv";
+const std::string UserController::CSV_PATH = "../model/data/user.csv";
 
-userController::userController() : csvCtrl(std::make_shared<csvController>(CSV_PATH)) {
+UserController::UserController() : csvCtrl(std::make_shared<CsvController>(CSV_PATH)) {
     // CSV 파일 초기화 (헤더 추가)
     csvCtrl->initializeWithHeaders({"ID", "UserID", "Password", "Permissions"});
     
     loadUsers();
 }
 
-void userController::loadUsers() {
+void UserController::loadUsers() {
     users.clear();
     auto records = csvCtrl->readAllRecords();
     
@@ -25,7 +25,7 @@ void userController::loadUsers() {
     }
 }
 
-int userController::findMaxUserId() const {
+int UserController::findMaxUserId() const {
     int maxId = 0;
     auto records = csvCtrl->readAllRecords();
     
@@ -39,7 +39,7 @@ int userController::findMaxUserId() const {
     return maxId;
 }
 
-bool userController::addUser(const std::string& userid, const std::string& password) {
+bool UserController::addUser(const std::string& userid, const std::string& password) {
     // 이미 존재하는 사용자 ID인지 확인
     if (isUserIdExists(userid)) {
         return false;
@@ -60,11 +60,11 @@ bool userController::addUser(const std::string& userid, const std::string& passw
     return csvCtrl->addRecord(record);
 }
 
-bool userController::isUserIdExists(const std::string& userid) const {
+bool UserController::isUserIdExists(const std::string& userid) const {
     return findUser(userid) != nullptr;
 }
 
-std::shared_ptr<User> userController::findUser(const std::string& userid) const {
+std::shared_ptr<User> UserController::findUser(const std::string& userid) const {
     for (const auto& user : users) {
         if (user.getUserId() == userid) {
             return std::make_shared<User>(user);

@@ -1,24 +1,20 @@
-#include "signupView.h"
-#include "../viewRender.h"
+#include "SignupView.h"
 
-signupView::signupView() : currentField(0), userCtrl(std::make_shared<userController>()) {
-    initialize();
-}
 
-void signupView::initialize() {
+SignupView::SignupView() : currentField(0), userCtrl(std::make_shared<UserController>()) {
     setTitle("회원가입");
     resetState();
 }
 
-void signupView::resetState() {
+void SignupView::resetState() {
     id = "";
     password = "";
     confirmPassword = "";
     currentField = 0;
 }
 
-void signupView::display() {
-    system("clear");  // 화면 클리어
+void SignupView::display() {
+    clearScreen();
     
     // 타이틀 표시
     std::string title = getTitle();
@@ -55,11 +51,11 @@ void signupView::display() {
     }
 }
 
-void signupView::displayInputField(const std::string& fieldName, bool isPassword) {
+void SignupView::displayInputField(const std::string& fieldName, bool isPassword) {
     std::cout << fieldName << "을(를) 입력하세요: ";
 }
 
-void signupView::processInput(const std::string& input) {
+void SignupView::processInput(const std::string& input) {
     switch (currentField) {
         case 0:
             id = input;
@@ -74,7 +70,7 @@ void signupView::processInput(const std::string& input) {
     currentField++;
 }
 
-bool signupView::validateInput() {
+bool SignupView::validateInput() {
     if (id.empty() || password.empty() || confirmPassword.empty()) {
         return false;
     }
@@ -85,16 +81,16 @@ bool signupView::validateInput() {
         std::cout << "\n이미 존재하는 아이디입니다!\n";
         std::cout << "아무 키나 눌러주세요...";
         std::cin.get();
-        getController()->goBack();
+        goBack();
         return false;
     }
     return true;
 }
 
-bool signupView::isPasswordMismatch() const {
+bool SignupView::isPasswordMismatch() const {
     return !password.empty() && !confirmPassword.empty() && password != confirmPassword;
 }
 
-bool signupView::registerUser() {
+bool SignupView::registerUser() {
     return userCtrl->addUser(id, password);
 } 

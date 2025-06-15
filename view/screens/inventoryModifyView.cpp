@@ -1,29 +1,19 @@
-#include "inventoryModifyView.h"
-#include "../viewRender.h"
+#include "InventoryModifyView.h"
 
-inventoryModifyView::inventoryModifyView() {
-    invCtrl = std::make_shared<inventoryController>();
-    prodCtrl = std::make_shared<productController>();
-    initialize();
-}
 
-void inventoryModifyView::initialize() {
+InventoryModifyView::InventoryModifyView() {
+    invCtrl = std::make_shared<InventoryController>();
+    prodCtrl = std::make_shared<ProductController>();
     setTitle("재고 증가/차감");
     setMenuItems({
         "뒤로가기"
     });
     setMenuActions({
-        [this]() { getController()->goBack(); }
+        [this]() { goBack(); }
     });
 }
-
-void inventoryModifyView::display() {
-    modifyInventory();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void inventoryModifyView::modifyInventory() {
+    
+void InventoryModifyView::modifyInventory() {
     std::cout << "\n=== 재고 증가/차감 ===\n";
     
     // 현재 재고 목록 표시
@@ -41,7 +31,7 @@ void inventoryModifyView::modifyInventory() {
     std::cout << "\n현재 재고 현황:\n";
     for (const auto& inv : inventories) {
         auto productIt = std::find_if(products.begin(), products.end(),
-            [&inv](const product& p) { return p.getProductID() == inv.getProductID(); });
+            [&inv](const Product& p) { return p.getProductID() == inv.getProductID(); });
         
         std::string productName = (productIt != products.end()) ? productIt->getName() : "알 수 없음";
         
@@ -58,7 +48,7 @@ void inventoryModifyView::modifyInventory() {
     
     // 재고 존재 여부 확인
     auto invIt = std::find_if(inventories.begin(), inventories.end(),
-        [&productID](const inventory& inv) { return inv.getProductID() == productID; });
+        [&productID](const Inventory& inv) { return inv.getProductID() == productID; });
     
     if (invIt == inventories.end()) {
         std::cout << "해당 제품의 재고가 등록되어 있지 않습니다.\n";
@@ -113,7 +103,7 @@ void inventoryModifyView::modifyInventory() {
     }
     
     // 재고 업데이트
-    inventory updatedInventory = *invIt;
+    Inventory updatedInventory = *invIt;
     updatedInventory.setQuantity(newQuantity);
     
     if (invCtrl->updateInventory(updatedInventory)) {

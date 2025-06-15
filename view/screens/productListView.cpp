@@ -1,28 +1,17 @@
-#include "productListView.h"
-#include "../viewRender.h"
+#include "ProductListView.h"
 
-productListView::productListView() {
-    prodCtrl = std::make_shared<productController>();
-    initialize();
-}
-
-void productListView::initialize() {
+ProductListView::ProductListView() {
+    prodCtrl = std::make_shared<ProductController>();
     setTitle("제품 조회");
     setMenuItems({
         "뒤로가기"
     });
     setMenuActions({
-        [this]() { getController()->goBack(); }
+        [this]() { goBack(); } 
     });
 }
 
-void productListView::display() {
-    showProductList();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void productListView::showProductList() {
+void ProductListView::showProductList() {
     std::cout << "\n=== 제품 목록 ===\n";
     std::cout << std::left << std::setw(10) << "제품ID" 
               << std::setw(20) << "제품명" 

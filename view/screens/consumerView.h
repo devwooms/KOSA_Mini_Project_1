@@ -1,17 +1,11 @@
 #ifndef CONSUMER_VIEW_H
 #define CONSUMER_VIEW_H
 
-#include "../baseScreenView.h"
-#include "../../controller/screenController.h"
-#include <memory>
-#include <iostream>
-#include <limits>
+#include "../BaseScreenView.h"
 
-class consumerView : public baseScreenView {
+class ConsumerView : public BaseScreenView {
 public:
-    consumerView();
-    void initialize() override;
-    void display() override;
+    ConsumerView();
 };
 
 #endif // CONSUMER_VIEW_H 

@@ -1,28 +1,18 @@
-#include "productEditView.h"
-#include "../viewRender.h"
+#include "ProductEditView.h"
 
-productEditView::productEditView() {
-    prodCtrl = std::make_shared<productController>();
-    initialize();
-}
 
-void productEditView::initialize() {
+ProductEditView::ProductEditView() {
+    prodCtrl = std::make_shared<ProductController>();
     setTitle("제품 수정");
     setMenuItems({
         "뒤로가기"
     });
     setMenuActions({
-        [this]() { getController()->goBack(); }
+        [this]() { goBack(); }
     });
 }
 
-void productEditView::display() {
-    editProduct();
-    std::cout << "\n";
-    viewRender::render(getTitle(), getMenuItems());
-}
-
-void productEditView::editProduct() {
+void ProductEditView::editProduct() {
     std::cout << "\n=== 제품 수정 ===\n";
     
     auto products = prodCtrl->getAllProducts();
@@ -48,7 +38,7 @@ void productEditView::editProduct() {
     
     // 제품 존재 여부 확인
     auto productIt = std::find_if(products.begin(), products.end(),
-        [&productID](const product& p) { return p.getProductID() == productID; });
+        [&productID](const Product& p) { return p.getProductID() == productID; });
     
     if (productIt == products.end()) {
         std::cout << "존재하지 않는 제품 ID입니다.\n";
@@ -117,7 +107,7 @@ void productEditView::editProduct() {
     
     if (confirm == 'y' || confirm == 'Y') {
         // 제품 정보 업데이트
-        product updatedProduct = *productIt;
+        Product updatedProduct = *productIt;
         updatedProduct.setName(newName);
         updatedProduct.setPrice(newPrice);
         updatedProduct.setCategory(newCategory);

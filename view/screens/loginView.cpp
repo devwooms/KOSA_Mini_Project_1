@@ -1,30 +1,21 @@
-#include "loginView.h"
-#include "../viewRender.h"
+#include "LoginView.h"
 
-loginView::loginView() : currentField(0), userCtrl(std::make_shared<userController>()) {
-    initialize();
-}
 
-void loginView::initialize() {
+LoginView::LoginView() : currentField(0), userCtrl(std::make_shared<UserController>()) {
     setTitle("로그인");
     resetState();
 }
 
-void loginView::resetState() {
+void LoginView::resetState() {
     id = "";
     password = "";
     currentField = 0;
 }
 
-void loginView::display() {
-    system("clear");  // 화면 클리어
-    
-    // 타이틀 표시
-    std::string title = getTitle();
-    std::string border(title.length() + 4, '=');
-    std::cout << "\n" << border << "\n";
-    std::cout << "= " << title << " =\n";
-    std::cout << border << "\n\n";
+void LoginView::display() {
+    clearScreen();
+    renderTitle(getTitle());
+    renderMenuItems(getMenuItems());
 
     std::cout << "로그인을 위해 다음 정보를 입력해주세요.\n\n";
     
@@ -48,13 +39,13 @@ void loginView::display() {
     }
 }
 
-void loginView::displayInputField(const std::string& fieldName, bool isPassword) {
+void LoginView::displayInputField(const std::string& fieldName, bool isPassword) {
     std::cout << fieldName << "을(를) 입력하세요 (0: 뒤로가기): ";
 }
 
-void loginView::processInput(const std::string& input) {
+void LoginView::processInput(const std::string& input) {
     if (input == "0") {
-        getController()->goBack();
+        goBack();
         return;
     }
 
@@ -69,7 +60,7 @@ void loginView::processInput(const std::string& input) {
     currentField++;
 }
 
-bool loginView::validateInput() {
+bool LoginView::validateInput() {
     if (id.empty() || password.empty()) {
         return false;
     }

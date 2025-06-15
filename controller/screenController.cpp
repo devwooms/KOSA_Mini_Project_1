@@ -1,197 +1,95 @@
-#include "screenController.h"
-#include "../view/baseScreenView.h"
-#include "../view/screens/homeView.h"
-#include "../view/screens/loginView.h"
-#include "../view/screens/signupView.h"
-#include "../view/screens/consumerView.h"
-#include "../view/screens/adminView.h"
-#include "../view/screens/productManagementView.h"
-#include "../view/screens/inventoryManagementView.h"
-#include "../view/screens/inventoryListView.h"
-#include "../view/screens/inventoryAddView.h"
-#include "../view/screens/inventoryModifyView.h"
-#include "../view/screens/productListView.h"
-#include "../view/screens/productAddView.h"
-#include "../view/screens/productEditView.h"
-#include "../view/screens/productDeleteView.h"
-#include "../view/screens/inventoryListView.h"
-#include "../view/screens/inventoryAddView.h"
-#include "../view/screens/inventoryModifyView.h"
-#include "../view/screens/productListView.h"
-#include "../view/screens/productAddView.h"
-#include "../view/screens/productEditView.h"
-#include "../view/screens/productDeleteView.h"
+#include "ScreenController.h"
+#include "../view/screens/HomeView.h"
+#include "../view/screens/LoginView.h"
+#include "../view/screens/SignupView.h"
+#include "../view/screens/ConsumerView.h"
+#include "../view/screens/AdminView.h"
+#include "../view/screens/ProductManagementView.h"
+#include "../view/screens/InventoryManagementView.h"
+#include "../view/screens/InventoryListView.h"
+#include "../view/screens/InventoryAddView.h"
+#include "../view/screens/InventoryModifyView.h"
+#include "../view/screens/ProductListView.h"
+#include "../view/screens/ProductAddView.h"
+#include "../view/screens/ProductEditView.h"
+#include "../view/screens/ProductDeleteView.h"
 #include <iostream>
-#include <limits>
 
-screenController::screenController() {
-    // 화면들 등록
-    registerScreen("home", std::make_shared<homeView>());
-    registerScreen("login", std::make_shared<loginView>());
-    registerScreen("signup", std::make_shared<signupView>());
-    registerScreen("consumer", std::make_shared<consumerView>());
-    registerScreen("admin", std::make_shared<adminView>());
-    registerScreen("product_management", std::make_shared<productManagementView>());
-    registerScreen("inventory_management", std::make_shared<inventoryManagementView>());
-    
-    // 재고 관리 세부 화면들
-    registerScreen("inventory_list", std::make_shared<inventoryListView>());
-    registerScreen("inventory_add", std::make_shared<inventoryAddView>());
-    registerScreen("inventory_modify", std::make_shared<inventoryModifyView>());
-    
-    // 제품 관리 세부 화면들
-    registerScreen("product_list", std::make_shared<productListView>());
-    registerScreen("product_add", std::make_shared<productAddView>());
-    registerScreen("product_edit", std::make_shared<productEditView>());
-    registerScreen("product_delete", std::make_shared<productDeleteView>());
-}
+// ============================================================================
+// 스택 관리 메서드들
+// ============================================================================
 
-int screenController::getInput(int maxChoice) {
-    int choice;
-    while (true) {
-        if (screenStack.size() > 1) {
-            std::cout << "선택하세요 (0: 뒤로가기, 1~" << maxChoice << "): ";
-        } else {
-            std::cout << "선택하세요 (0: 종료, 1~" << maxChoice << "): ";
-        }
-        
-        if (std::cin >> choice) {
-            // 입력 버퍼 비우기
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            
-            // 유효한 입력인지 확인
-            if (choice >= 0 && choice <= maxChoice) {
-                return choice;
-            }
-        } else {
-            // 잘못된 입력 처리
-            std::cin.clear();  // 오류 상태 초기화
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        std::cout << "잘못된 입력입니다. 다시 선택하세요.\n";
-    }
-}
-
-void screenController::run() {
-    // 초기 화면으로 home을 설정
-    navigateTo("home");
-
-    bool running = true;
-    while (running && !screenStack.empty()) {
-        auto currentScreen = screenStack.top();
-        
-        // 현재 화면 표시
-        currentScreen->display();
-        
-        /* =============================== */
-        /* 회원가입 화면인 경우 특별 처리 */
-        /* =============================== */
-        if (auto signupScreen = dynamic_cast<signupView*>(currentScreen.get())) {
-            std::string input;
-            std::getline(std::cin, input);
-            
-            if (input == "0") {  // 뒤로가기
-                goBack();
-                continue;
-            }
-            
-            signupScreen->processInput(input);
-            if (signupScreen->validateInput()) {
-                // 회원가입 완료 처리
-                if (signupScreen->registerUser()) {
-                    std::cout << "\n회원가입이 완료되었습니다!\n";
-                    std::cout << "아무 키나 눌러주세요...";
-                    std::cin.get();
-                    goBack();
-                } else {
-                    std::cout << "\n회원가입 처리 중 오류가 발생했습니다.\n";
-                    std::cout << "아무 키나 눌러주세요...";
-                    std::cin.get();
-                }
-            } else if (signupScreen->isPasswordMismatch()) {
-                std::cout << "\n비밀번호가 일치하지 않습니다!\n";
-                std::cout << "아무 키나 눌러주세요...";
-                std::cin.get();
-                goBack();
-            }
-            continue;
-        }
-
-        /* =============================== */
-        /* 로그인 화면인 경우 특별 처리 */
-        /* =============================== */
-        if (auto loginScreen = dynamic_cast<loginView*>(currentScreen.get())) {
-            std::string input;
-            std::getline(std::cin, input);
-            
-            loginScreen->processInput(input);
-            if (loginScreen->getCurrentField() == 2) {  // 모든 입력이 완료됨
-                if (loginScreen->validateInput()) {
-                    // 로그인 성공 시 적절한 화면으로 이동
-                    auto user = loginScreen->getCurrentUser();
-                    if (user->getPermissions() == User::ADMIN) {
-                        navigateToSkip("admin");
-                    } else {
-                        navigateToSkip("consumer");
-                    }
-                }
-            }
-            continue;
-        }
-        
-        /* 일반 메뉴 화면 처리 */
-        int maxChoice = currentScreen->getMenuItems().size();
-        int choice = getInput(maxChoice);
-        
-        if (choice == 0) {
-            if (screenStack.size() > 1) {
-                goBack();
-            } else {
-                // 메인 화면에서 0을 선택하면 프로그램 종료
-                running = false;
-            }
-        } else if (choice > 0 && choice <= maxChoice) {
-            // 메뉴 액션 실행 (choice는 1부터 시작하므로 인덱스로 변환)
-            const auto& actions = currentScreen->getMenuActions();
-            if (choice <= actions.size()) {
-                actions[choice - 1]();
-            }
-        }
-    }
-    
-    std::cout << "\n프로그램을 종료합니다.\n";
-}
-
-void screenController::navigateTo(const std::string& screenName) {
-    if (screens.find(screenName) != screens.end()) {
-        auto screen = screens[screenName];
+// 화면 스택에 화면 추가
+void ScreenController::pushScreen(std::shared_ptr<BaseScreenView> screen) {
+    if (screen) {
         screen->setController(this);
-        screen->resetState();  // 화면 전환 시 상태 초기화
+        screen->resetState();
         screenStack.push(screen);
     }
 }
 
-void screenController::navigateToSkip(const std::string& screenName) {
-    if (screens.find(screenName) != screens.end()) {
-        if (!screenStack.empty()) {
-            screenStack.top()->resetState();  // 현재 화면의 상태 초기화
-            screenStack.pop();  // 현재 화면 제거
-        }
-        auto screen = screens[screenName];
-        screen->setController(this);
-        screen->resetState();  // 새 화면 초기화
-        screenStack.push(screen);
-    }
-}
-
-void screenController::goBack() {
+// 화면 스택에서 화면 제거
+void ScreenController::popScreen() {
     if (!screenStack.empty()) {
-        screenStack.top()->resetState();  // 현재 화면의 상태 초기화
         screenStack.pop();
     }
 }
 
-void screenController::registerScreen(const std::string& name, std::shared_ptr<baseScreenView> screen) {
-    screens[name] = screen;
-    screen->setController(this);
-} 
+// 화면 스택에서 화면 교체
+void ScreenController::replaceScreen(std::shared_ptr<BaseScreenView> screen) {
+    if (!screenStack.empty()) {
+        screenStack.pop();
+    }
+    pushScreen(screen);
+}
+
+// 화면 스택 초기화
+void ScreenController::clearStack() {
+    while (!screenStack.empty()) {
+        screenStack.pop();
+    }
+}
+
+// ============================================================================
+// 현재 화면 실행
+// ============================================================================
+
+// 화면 실행
+void ScreenController::run() {
+    // 초기 화면 설정
+    if (screenStack.empty()) {
+        pushScreen(std::make_shared<HomeView>());
+    }
+    
+    bool running = true;
+    while (running && !screenStack.empty()) {
+        auto currentScreen = screenStack.top();
+        
+        // 각 화면의 run() 메서드 호출
+        currentScreen->run();
+        
+        // 스택이 비었으면 종료
+        if (screenStack.empty()) {
+            running = false;
+        }
+    }
+}
+
+// ============================================================================
+// 접근자 메서드들
+// ============================================================================
+
+// 현재 화면 반환
+std::shared_ptr<BaseScreenView> ScreenController::getCurrentScreen() const {
+    return screenStack.empty() ? nullptr : screenStack.top();
+}
+
+// 화면 스택 비었는지 확인
+bool ScreenController::hasScreens() const {
+    return !screenStack.empty();
+}
+
+// 화면 스택 크기 반환
+size_t ScreenController::getStackSize() const {
+    return screenStack.size();
+}
