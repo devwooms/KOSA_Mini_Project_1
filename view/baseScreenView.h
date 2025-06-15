@@ -13,6 +13,7 @@ class BaseScreenView {
 private:
   static const int DEFAULT_WIDTH = 50; // 렌더링 폭 설정
 
+  int showError = 0;
   // 오류 안내
   std::vector<std::string> errorMessages;
   // 화면 제목
@@ -28,15 +29,17 @@ protected:
   // 렌더링 메서드들
   void renderTitle(const std::string &title) const;
   void renderMenuItems(const std::vector<std::string> &menuItems) const;
-
+  void renderErrorMessages(const std::string &errorMessage) const;
   // 기본 네비게이션 헬퍼
   void goBack();
+  void goToScreen(std::shared_ptr<BaseScreenView> screen);
 
 public:
   BaseScreenView() = default;
   virtual ~BaseScreenView() = default;
 
   // setters
+  void setShowError(int showError) { this->showError = showError; }
   void setErrorMessages(const std::vector<std::string> &messages) { errorMessages = messages; }
   void setTitle(const std::string &newTitle) { title = newTitle; }
   void setMenuItems(const std::vector<std::string> &items) { menuItems = items; }
@@ -44,6 +47,7 @@ public:
   void setController(ScreenController *ctrl) { controller = ctrl; }
 
   // getters
+  int getShowError() const { return showError; }
   const std::vector<std::string> &getErrorMessages() const { return errorMessages; }
   std::string getTitle() const { return title; }
   std::vector<std::string> getMenuItems() const { return menuItems; }

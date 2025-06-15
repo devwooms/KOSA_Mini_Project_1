@@ -24,10 +24,23 @@ void BaseScreenView::clearScreen() const {
 // 렌더링 헬퍼 메서드들
 // ============================================================================
 
+// 에러 메시지 렌더링
+void BaseScreenView::renderErrorMessages(const std::string &errorMessage) const {
+  // ANSI 색상 코드
+  const std::string RED = "\033[31m";      // 빨간색
+  const std::string RESET = "\033[0m";     // 색상 리셋
+  
+  if (errorMessage.empty() || errorMessage == " ") {
+    std::cout << "\n" << errorMessage << "\n";
+  } else {
+    std::cout << "\n" << RED << errorMessage << RESET << "\n";
+  }
+}
+
 // 타이틀 렌더링
 void BaseScreenView::renderTitle(const std::string &title) const {
   const int titleLength = static_cast<int>(title.length());
-  const std::string border(titleLength + 4, '=');
+  const std::string border(titleLength + 2, '=');
 
   std::cout << "\n\n";
   std::cout << std::setw(DEFAULT_WIDTH) << std::left << border << "\n";
@@ -51,8 +64,16 @@ void BaseScreenView::renderMenuItems(
 // 기본 네비게이션 헬퍼
 // ============================================================================
 
+// 이전 화면으로 이동
 void BaseScreenView::goBack() {
   if (controller) {
     controller->popScreen();
+  }
+}
+
+// 다음 화면으로 이동
+void BaseScreenView::goToScreen(std::shared_ptr<BaseScreenView> screen) {
+  if (controller) {
+    controller->pushScreen(screen);
   }
 }
