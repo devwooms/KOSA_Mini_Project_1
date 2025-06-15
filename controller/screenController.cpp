@@ -7,6 +7,20 @@
 #include "../view/screens/adminView.h"
 #include "../view/screens/productManagementView.h"
 #include "../view/screens/inventoryManagementView.h"
+#include "../view/screens/inventoryListView.h"
+#include "../view/screens/inventoryAddView.h"
+#include "../view/screens/inventoryModifyView.h"
+#include "../view/screens/productListView.h"
+#include "../view/screens/productAddView.h"
+#include "../view/screens/productEditView.h"
+#include "../view/screens/productDeleteView.h"
+#include "../view/screens/inventoryListView.h"
+#include "../view/screens/inventoryAddView.h"
+#include "../view/screens/inventoryModifyView.h"
+#include "../view/screens/productListView.h"
+#include "../view/screens/productAddView.h"
+#include "../view/screens/productEditView.h"
+#include "../view/screens/productDeleteView.h"
 #include <iostream>
 #include <limits>
 
@@ -19,6 +33,17 @@ screenController::screenController() {
     registerScreen("admin", std::make_shared<adminView>());
     registerScreen("product_management", std::make_shared<productManagementView>());
     registerScreen("inventory_management", std::make_shared<inventoryManagementView>());
+    
+    // 재고 관리 세부 화면들
+    registerScreen("inventory_list", std::make_shared<inventoryListView>());
+    registerScreen("inventory_add", std::make_shared<inventoryAddView>());
+    registerScreen("inventory_modify", std::make_shared<inventoryModifyView>());
+    
+    // 제품 관리 세부 화면들
+    registerScreen("product_list", std::make_shared<productListView>());
+    registerScreen("product_add", std::make_shared<productAddView>());
+    registerScreen("product_edit", std::make_shared<productEditView>());
+    registerScreen("product_delete", std::make_shared<productDeleteView>());
 }
 
 int screenController::getInput(int maxChoice) {
