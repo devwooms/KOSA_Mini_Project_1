@@ -4,7 +4,7 @@
 
 #include "../../controller/ScreenController.h"
 #include "AdminInventoryManagementView.h"
-#include "ProductManagementView.h"
+#include "AdminProductManagementView.h"
 
 AdminMainView::AdminMainView()
 {
@@ -14,7 +14,7 @@ AdminMainView::AdminMainView()
     });
     setTitle("관리자 메뉴");
     setMenuItems({"제품 관리", "재고 관리"});
-    setMenuActions({[this]() { goToScreen(std::make_shared<ProductManagementView>()); },
+    setMenuActions({[this]() { goToScreen(std::make_shared<AdminProductManagementView>()); },
                     [this]() { goToScreen(std::make_shared<AdminInventoryManagementView>()); }});
 }
 

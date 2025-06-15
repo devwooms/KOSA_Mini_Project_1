@@ -1,25 +1,44 @@
-#include "ProductListView.h"
+#include "AdminProductManagementView.h"
 
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
+#include "AdminProductAddView.h"
+#include "AdminProductDeleteView.h"
+#include "AdminProductEditView.h"
+#include "AdminProductListView.h"
 
-ProductListView::ProductListView()
+AdminProductManagementView::AdminProductManagementView()
 {
     setErrorMessages({
         " ",
         "잘못된 입력입니다. 다시 선택하세요.",
     });
-    setTitle("제품 조회");
-    setMenuItems({"제품 목록 보기"});
+    setTitle("제품 관리");
+    setMenuItems({"제품 조회", "제품 입력", "제품 수정", "제품 삭제"});
     setMenuActions({[this]()
                     {
-                        // 제품 목록 보기 기능
-                        std::cout << "제품 목록 보기 기능 준비 중...\n";
+                        // 제품 조회 화면으로 이동
+                        goToScreen(std::make_shared<AdminProductListView>());
+                    },
+                    [this]()
+                    {
+                        // 제품 입력 화면으로 이동
+                        goToScreen(std::make_shared<AdminProductAddView>());
+                    },
+                    [this]()
+                    {
+                        // 제품 수정 화면으로 이동
+                        goToScreen(std::make_shared<AdminProductEditView>());
+                    },
+                    [this]()
+                    {
+                        // 제품 삭제 화면으로 이동
+                        goToScreen(std::make_shared<AdminProductDeleteView>());
                     }});
 }
 
-int ProductListView::getUserChoice()
+int AdminProductManagementView::getUserChoice()
 {
     int choice;
     std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
@@ -46,7 +65,7 @@ int ProductListView::getUserChoice()
     return -1;
 }
 
-void ProductListView::run()
+void AdminProductManagementView::run()
 {
     while (true)
     {
@@ -85,10 +104,7 @@ void ProductListView::run()
             if (choice <= actions.size() && actions[choice - 1])
             {
                 actions[choice - 1]();  // 설정된 액션 실행
-
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
+                break;                  // 액션 실행 후 루프 종료
             }
         }
     }

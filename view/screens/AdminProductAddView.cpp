@@ -1,25 +1,25 @@
-#include "ProductEditView.h"
+#include "AdminProductAddView.h"
 
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
 
-ProductEditView::ProductEditView()
+AdminProductAddView::AdminProductAddView()
 {
     setErrorMessages({
         " ",
         "잘못된 입력입니다. 다시 선택하세요.",
     });
-    setTitle("제품 수정");
-    setMenuItems({"제품 수정하기"});
+    setTitle("제품 입력");
+    setMenuItems({"새 제품 추가"});
     setMenuActions({[this]()
                     {
-                        // 제품 수정 기능
-                        std::cout << "제품 수정 기능 준비 중...\n";
+                        // 새 제품 추가 기능
+                        std::cout << "새 제품 추가 기능 준비 중...\n";
                     }});
 }
 
-int ProductEditView::getUserChoice()
+int AdminProductAddView::getUserChoice()
 {
     int choice;
     std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
@@ -46,7 +46,7 @@ int ProductEditView::getUserChoice()
     return -1;
 }
 
-void ProductEditView::run()
+void AdminProductAddView::run()
 {
     while (true)
     {
