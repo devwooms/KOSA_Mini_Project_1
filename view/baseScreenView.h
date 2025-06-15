@@ -37,41 +37,27 @@ public:
   virtual ~BaseScreenView() = default;
 
   // setters
-  void setErrorMessages(const std::vector<std::string> &messages) {
-    errorMessages = messages;
-  }
+  void setErrorMessages(const std::vector<std::string> &messages) { errorMessages = messages; }
   void setTitle(const std::string &newTitle) { title = newTitle; }
-  void setMenuItems(const std::vector<std::string> &items) {
-    menuItems = items;
-  }
-  void setMenuActions(const std::vector<std::function<void()>> &actions) {
-    menuActions = actions;
-  }
+  void setMenuItems(const std::vector<std::string> &items) { menuItems = items; }
+  void setMenuActions(const std::vector<std::function<void()>> &actions) { menuActions = actions; }
   void setController(ScreenController *ctrl) { controller = ctrl; }
 
   // getters
-  const std::vector<std::string> &getErrorMessages() const {
-    return errorMessages;
-  }
+  const std::vector<std::string> &getErrorMessages() const { return errorMessages; }
   std::string getTitle() const { return title; }
   std::vector<std::string> getMenuItems() const { return menuItems; }
-  const std::vector<std::function<void()>> &getMenuActions() const {
-    return menuActions;
-  }
+  const std::vector<std::function<void()>> &getMenuActions() const { return menuActions; }
   ScreenController *getController() const { return controller; }
 
+  /* ================================================ */
+  /* 화면 관련 메서드들 */
+  /* ================================================ */
   // 화면 지우기
   void clearScreen() const;
-
   // 각 화면의 실행 로직 (가상 메서드)
   virtual void run() {}
 
-  // 하위 호환성을 위한 메서드들
-  virtual void initialize() {}
-  virtual void display() {}
-  virtual void resetState() {}
-  virtual void processInput(const std::string &input) {}
-  virtual bool validateInput() { return true; }
 };
 
 #endif // BASE_SCREEN_VIEW_H

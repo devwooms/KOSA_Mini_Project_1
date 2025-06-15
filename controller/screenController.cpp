@@ -23,7 +23,6 @@
 void ScreenController::pushScreen(std::shared_ptr<BaseScreenView> screen) {
     if (screen) {
         screen->setController(this);
-        screen->resetState();
         screenStack.push(screen);
     }
 }

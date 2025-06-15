@@ -13,8 +13,7 @@ private:
   std::string id;
   std::string password;
   std::string confirmPassword;
-  int currentField; // 현재 입력 중인 필드 (0: id, 1: password, 2:
-                    // confirmPassword)
+  int currentField; // 현재 입력 중인 필드 (0: id, 1: password, 2: confirmPassword)
   std::shared_ptr<UserController> userCtrl;
 
 public:
