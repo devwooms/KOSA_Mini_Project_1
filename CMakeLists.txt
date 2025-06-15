@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE VIEW_SOURCES
     "view/*.cpp"
     "view/*.h"
+    "view/*.hpp"
+    "view/screens/*.cpp"
+    "view/screens/*.hpp"
 )
 
 # model 폴더의 모든 소스 파일을 자동으로 찾기
