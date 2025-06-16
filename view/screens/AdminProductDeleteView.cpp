@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
+#include "../../controller/ProductController.h"
 
 AdminProductDeleteView::AdminProductDeleteView()
 {
@@ -11,43 +12,13 @@ AdminProductDeleteView::AdminProductDeleteView()
         "잘못된 입력입니다. 다시 선택하세요.",
     });
     setTitle("제품 삭제");
-    setMenuItems({"제품 삭제하기"});
-    setMenuActions({[this]()
-                    {
-                        // 제품 삭제 기능
-                        std::cout << "제품 삭제 기능 준비 중...\n";
-                    }});
 }
 
-int AdminProductDeleteView::getUserChoice()
-{
-    int choice;
-    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
-
-    if (std::cin >> choice)
-    {
-        // 입력 버퍼 비우기
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        // 유효한 입력인지 확인
-        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            return choice;
-        }
-    }
-    else
-    {
-        // 잘못된 입력 처리
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    // 잘못된 입력의 경우 -1 반환
-    return -1;
-}
 
 void AdminProductDeleteView::run()
 {
+    ProductController productController;
+
     while (true)
     {
         // 화면 지우기
@@ -59,37 +30,47 @@ void AdminProductDeleteView::run()
         // 타이틀 표시
         renderTitle(getTitle());
 
-        // 메뉴 표시
-        renderMenuItems(getMenuItems());
-
-        // 사용자 입력 받기
-        int choice = getUserChoice();
-
-        // 선택 처리
-        if (choice == -1)
+        std::cout << "삭제 할 제품ID (0: 뒤로가기): ";
+        std::string productID;
+        std::cin >> productID;
+        if (productID == "0")
         {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
-        }
-        else if (choice == 0)
-        {
-            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
             goBack();
             break;
         }
-        else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            // 생성자에서 설정한 menuActions 활용
-            const auto& actions = getMenuActions();
-            if (choice <= actions.size() && actions[choice - 1])
-            {
-                actions[choice - 1]();  // 설정된 액션 실행
 
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
-            }
+        Product *product = productController.findProductByProductID(productID);
+        if (product == nullptr)
+        {
+            setShowError(1);
+            continue;
+        }
+
+        std::cout << "\n=== 삭제 할 제품 정보 ===\n";
+        std::cout << std::left << std::setw(8) << "제품ID\t\t" << std::setw(15) << "이름\t"
+                    << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
+        std::cout << "-----------------------------------------------------------\n";
+        std::cout << std::left << std::setw(8) << product->getProductID() << "\t"
+                  << std::setw(15) << product->getName() << "\t"
+                  << std::setw(8) << (std::to_string(product->getPrice()) + "원") << "\t"
+                  << std::setw(10) << product->getCategory() << "\n";
+
+        std::cout << "\n이 제품이 맞습니까? (0: 뒤로가기, 1: 삭제): ";
+        std::string choice;
+        std::cin >> choice;
+        if (choice == "0")
+        {
+            goBack();
+            break;
+        }
+        else if (choice == "1")
+        {
+            productController.deleteProduct(productID);
+            std::cout << "제품이 삭제되었습니다." << std::endl;
+            std::cout << "계속하려면 Enter를 누르세요...";
+            std::cin.get();
+            goBack();
+            break;
         }
     }
 }

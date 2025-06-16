@@ -5,8 +5,6 @@
 
 class AdminProductDeleteView : public BaseScreenView
 {
-   private:
-    int getUserChoice();  // 사용자 입력 처리
 
    public:
     AdminProductDeleteView();
