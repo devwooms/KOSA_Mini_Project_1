@@ -1,53 +1,27 @@
 #include "AdminProductEditView.h"
 
 #include <iostream>
+#include <iomanip>
 
 #include "../../controller/ScreenController.h"
+#include "../../controller/ProductController.h"
+
 
 AdminProductEditView::AdminProductEditView()
 {
     setErrorMessages({
         " ",
-        "잘못된 입력입니다. 다시 선택하세요.",
+        "존재하지 않는 제품ID입니다.",
     });
     setTitle("제품 수정");
-    setMenuItems({"제품 수정하기"});
-    setMenuActions({[this]()
-                    {
-                        // 제품 수정 기능
-                        std::cout << "제품 수정 기능 준비 중...\n";
-                    }});
 }
 
-int AdminProductEditView::getUserChoice()
-{
-    int choice;
-    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
-
-    if (std::cin >> choice)
-    {
-        // 입력 버퍼 비우기
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        // 유효한 입력인지 확인
-        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            return choice;
-        }
-    }
-    else
-    {
-        // 잘못된 입력 처리
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    // 잘못된 입력의 경우 -1 반환
-    return -1;
-}
 
 void AdminProductEditView::run()
 {
+    std::string productID;
+
+    ProductController productController;
     while (true)
     {
         // 화면 지우기
@@ -59,37 +33,129 @@ void AdminProductEditView::run()
         // 타이틀 표시
         renderTitle(getTitle());
 
-        // 메뉴 표시
-        renderMenuItems(getMenuItems());
-
-        // 사용자 입력 받기
-        int choice = getUserChoice();
-
-        // 선택 처리
-        if (choice == -1)
+        std::cout << "제품ID (0: 뒤로가기): ";
+        std::cin >> productID;
+        if (productID == "0")
         {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
-        }
-        else if (choice == 0)
-        {
-            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
             goBack();
             break;
         }
-        else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            // 생성자에서 설정한 menuActions 활용
-            const auto& actions = getMenuActions();
-            if (choice <= actions.size() && actions[choice - 1])
-            {
-                actions[choice - 1]();  // 설정된 액션 실행
 
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
+        Product *product = productController.findProductByProductID(productID);
+        if (product == nullptr)
+        {
+            setShowError(1);
+            continue;
+        }
+
+        std::cout << "\n=== 현재 제품 정보 ===\n";
+        std::cout << std::left << std::setw(8) << "제품ID\t\t" << std::setw(15) << "이름\t"
+                    << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
+        std::cout << "-----------------------------------------------------------\n";
+        std::cout << std::left << std::setw(8) << product->getProductID() << "\t"
+                  << std::setw(15) << product->getName() << "\t"
+                  << std::setw(8) << (std::to_string(product->getPrice()) + "원") << "\t"
+                  << std::setw(10) << product->getCategory() << "\n";
+
+        std::cout << "\n수정할 정보를 입력하세요 (0: 뒤로가기, 1: 제품명, 2: 가격, 3: 카테고리, 4: 설명): ";
+        std::string choice;
+        std::cin >> choice;
+        
+        if (choice == "0")
+        {
+            goBack();
+            break;
+        } 
+        else if (choice == "1") 
+        {
+            std::cout << "새 제품명 (0: 뒤로가기): ";
+            std::string name;
+            std::cin >> name;
+            if (name == "0")
+            {
+                continue;  // 뒤로가기 - 제품 선택으로 돌아감
+            }
+            product->setName(name);
+        } 
+        else if (choice == "2") 
+        {
+            std::cout << "새 가격 (0: 뒤로가기): ";
+            int price;
+            std::cin >> price;
+            if (price == 0)
+            {
+                continue;  // 뒤로가기 - 제품 선택으로 돌아감
+            }
+            product->setPrice(price);
+        } 
+        else if (choice == "3") 
+        {
+            std::cout << "새 카테고리 (0: 뒤로가기): ";
+            std::string category;
+            std::cin >> category;
+            if (category == "0")
+            {
+                continue;  // 뒤로가기 - 제품 선택으로 돌아감
+            }
+            product->setCategory(category);
+        } 
+        else if (choice == "4") 
+        {
+            std::cout << "새 설명 (0: 뒤로가기): ";
+            std::string description;
+            std::cin >> description;
+            if (description == "0")
+            {
+                continue;  // 뒤로가기 - 제품 선택으로 돌아감
+            }
+            product->setDescription(description);
+        }
+        else
+        {
+            continue;  // 잘못된 선택 - 다시 선택하게 함
+        }
+
+        std::cout << "\n=== 수정된 제품 정보 ===\n";
+        std::cout << std::left << std::setw(8) << "제품ID\t\t" << std::setw(15) << "이름\t"
+                    << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
+        std::cout << "-----------------------------------------------------------\n";
+        std::cout << std::left << std::setw(8) << product->getProductID() << "\t"
+                  << std::setw(15) << product->getName() << "\t"
+                  << std::setw(8) << (std::to_string(product->getPrice()) + "원") << "\t"
+                  << std::setw(10) << product->getCategory() << "\n";
+
+        std::cout << "\n수정을 저장하시겠습니까? (0: 취소, 1: 저장): ";
+        std::string choice2;
+        std::cin >> choice2;
+        
+        if (choice2 == "0")
+        {
+            continue;  // 취소 - 제품 선택으로 돌아감
+        } 
+        else if (choice2 == "1") 
+        {
+            bool success = productController.updateProduct(
+                product->getProductID(), 
+                product->getName(), 
+                product->getPrice(), 
+                product->getCategory(), 
+                product->getDescription()
+            );
+            
+            if (success)
+            {
+                std::cout << "제품 정보가 성공적으로 수정되었습니다!" << std::endl;
+            }
+            else
+            {
+                std::cout << "제품 수정에 실패했습니다." << std::endl;
             }
         }
+
+        std::cout << "\n계속하려면 Enter를 누르세요...";
+        std::cin.ignore();
+        std::cin.get();
+        
+        continue;  // 다시 제품 선택으로 돌아감
     }
 }

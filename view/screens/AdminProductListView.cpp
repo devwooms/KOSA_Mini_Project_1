@@ -1,49 +1,44 @@
 #include "AdminProductListView.h"
 
 #include <iostream>
+#include <iomanip>
+#include <limits>
 
 #include "../../controller/ScreenController.h"
+#include "../../controller/ProductController.h"
 
 AdminProductListView::AdminProductListView()
 {
     setErrorMessages({
         " ",
-        "잘못된 입력입니다. 다시 선택하세요.",
+        "잘못된 입력입니다. 다시 선택하세요."
     });
     setTitle("제품 조회");
-    setMenuItems({"제품 목록 보기"});
-    setMenuActions({[this]()
-                    {
-                        // 제품 목록 보기 기능
-                        std::cout << "제품 목록 보기 기능 준비 중...\n";
-                    }});
 }
 
 int AdminProductListView::getUserChoice()
 {
-    int choice;
-    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
+    std::string choice;
+    std::cout << "선택하세요 (0: 뒤로가기, 1: 전체보기): ";
 
-    if (std::cin >> choice)
+    std::cin >> choice;
+    // 입력 버퍼 비우기
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // 유효한 입력인지 확인
+    if (choice == "0")
     {
-        // 입력 버퍼 비우기
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        // 유효한 입력인지 확인
-        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            return choice;
-        }
+        return 0;
+    }
+    else if (choice == "1")
+    {
+        return 1;
     }
     else
     {
-        // 잘못된 입력 처리
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        // 잘못된 입력의 경우 -1 반환
+        return -1;
     }
-
-    // 잘못된 입력의 경우 -1 반환
-    return -1;
 }
 
 void AdminProductListView::run()
@@ -58,9 +53,6 @@ void AdminProductListView::run()
 
         // 타이틀 표시
         renderTitle(getTitle());
-
-        // 메뉴 표시
-        renderMenuItems(getMenuItems());
 
         // 사용자 입력 받기
         int choice = getUserChoice();
@@ -78,18 +70,42 @@ void AdminProductListView::run()
             goBack();
             break;
         }
-        else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size()))
+        else if (choice == 1)
         {
-            // 생성자에서 설정한 menuActions 활용
-            const auto& actions = getMenuActions();
-            if (choice <= actions.size() && actions[choice - 1])
-            {
-                actions[choice - 1]();  // 설정된 액션 실행
+            clearScreen();
+            // 전체 제품 목록 표시
+            ProductController productController;
+            auto products = productController.getAllProducts();
 
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
+            std::cout << "\n=== 전체 제품 목록 ===\n";
+            std::cout << std::left << std::setw(8) << "제품ID\t\t" << std::setw(15) << "이름\t"
+                      << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
+            std::cout << "-----------------------------------------------------------\n";
+
+            if (products.empty())
+            {
+                std::cout << "등록된 제품이 없습니다.\n";
             }
+            else
+            {
+                for (const auto& product : products)
+                {
+                    std::cout << std::left << std::setw(8) << product.getProductID() << "\t"
+                              << std::setw(15) << product.getName() << "\t"
+                              << std::setw(8) << (std::to_string(product.getPrice()) + "원") << "\t"
+                              << std::setw(10) << product.getCategory() << "\n";
+                }
+                std::cout << "\n총 " << products.size() << "개 제품 정보\n";
+            }
+
+            std::cout << "\n계속하려면 Enter를 누르세요...";
+            std::cin.get();
+        }
+        else
+        {
+            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
+            setShowError(1);
+            continue;
         }
     }
 }

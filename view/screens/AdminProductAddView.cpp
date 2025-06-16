@@ -3,51 +3,28 @@
 #include <iostream>
 
 #include "../../controller/ScreenController.h"
+#include "../../controller/ProductController.h"
 
 AdminProductAddView::AdminProductAddView()
 {
     setErrorMessages({
         " ",
+        "이미 존재하는 제품ID입니다.",
         "잘못된 입력입니다. 다시 선택하세요.",
     });
     setTitle("제품 입력");
-    setMenuItems({"새 제품 추가"});
-    setMenuActions({[this]()
-                    {
-                        // 새 제품 추가 기능
-                        std::cout << "새 제품 추가 기능 준비 중...\n";
-                    }});
-}
-
-int AdminProductAddView::getUserChoice()
-{
-    int choice;
-    std::cout << "선택하세요 (0: 뒤로가기, 1~" << getMenuItems().size() << "): ";
-
-    if (std::cin >> choice)
-    {
-        // 입력 버퍼 비우기
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        // 유효한 입력인지 확인
-        if (choice >= 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            return choice;
-        }
-    }
-    else
-    {
-        // 잘못된 입력 처리
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
-
-    // 잘못된 입력의 경우 -1 반환
-    return -1;
 }
 
 void AdminProductAddView::run()
 {
+    std::string productID;
+    std::string name;
+    int price;
+    std::string category;
+    std::string description;
+
+    ProductController productController;
+
     while (true)
     {
         // 화면 지우기
@@ -59,37 +36,61 @@ void AdminProductAddView::run()
         // 타이틀 표시
         renderTitle(getTitle());
 
-        // 메뉴 표시
-        renderMenuItems(getMenuItems());
+        std::cout << "제품ID (0: 뒤로가기): ";
+        std::cin >> productID;
 
-        // 사용자 입력 받기
-        int choice = getUserChoice();
-
-        // 선택 처리
-        if (choice == -1)
+        if (productID == "0")
         {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
-        }
-        else if (choice == 0)
-        {
-            // 뒤로가기 - 스택에서 제거하여 이전 화면으로
             goBack();
             break;
         }
-        else if (choice > 0 && choice <= static_cast<int>(getMenuItems().size()))
-        {
-            // 생성자에서 설정한 menuActions 활용
-            const auto& actions = getMenuActions();
-            if (choice <= actions.size() && actions[choice - 1])
-            {
-                actions[choice - 1]();  // 설정된 액션 실행
 
-                // 기능 실행 후 계속 루프
-                std::cout << "계속하려면 Enter를 누르세요...";
-                std::cin.get();
-            }
+        // 제품ID 중복 체크 - ProductController 메서드 활용
+        if (productController.findProductByProductID(productID) != nullptr)
+        {
+            setShowError(1);
+            continue;
         }
+
+        std::cout << "제품명 (0: 뒤로가기): ";
+        std::cin >> name;
+        if (name == "0")
+        {
+            goBack();
+            break;
+        }
+        std::cout << "가격 (0: 뒤로가기): ";
+        std::cin >> price;
+        if (price == 0)
+        {
+            goBack();
+            break;
+        }
+        std::cout << "카테고리 (0: 뒤로가기): ";
+        std::cin >> category;
+        if (category == "0")
+        {
+            goBack();
+            break;
+        }
+        std::cout << "설명 (0: 뒤로가기): ";
+        std::cin >> description;
+        if (description == "0")
+        {
+            goBack();
+            break;
+        }
+
+        if (productController.addProduct(productID, name, price, category, description))
+        {
+            std::cout << "제품이 추가되었습니다." << std::endl;
+        }
+
+        std::cout << "계속하려면 Enter를 누르세요...";
+        std::cin.ignore();
+        std::cin.get();
+
+        goBack();
+        break;
     }
 }
