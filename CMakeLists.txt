@@ -31,8 +31,8 @@ file(GLOB_RECURSE DATA_SOURCES
 
 # 소스 파일 목록
 set(SOURCES
-    main.cpp
-    util.cpp
+    Main.cpp
+    Util.cpp
     ${VIEW_SOURCES}
     ${MODEL_SOURCES}
     ${CONTROLLER_SOURCES}
