@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "BaseController.h"
 #include "../model/Inventory.h"
+#include "BaseController.h"
 
 class InventoryController : public BaseController
 {
@@ -16,7 +16,7 @@ class InventoryController : public BaseController
     // 인벤토리 목록 로드 (BaseController의 순수 가상 함수 구현)
     void loadData() override;
 
-protected:
+   protected:
     // BaseController의 순수 가상 함수들 구현
     std::string getFilePath() const override;
     std::vector<std::string> getHeaders() const override;

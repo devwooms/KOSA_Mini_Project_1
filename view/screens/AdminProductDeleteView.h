@@ -5,7 +5,6 @@
 
 class AdminProductDeleteView : public BaseScreenView
 {
-
    public:
     AdminProductDeleteView();
     void run() override;  // 자체 실행 로직

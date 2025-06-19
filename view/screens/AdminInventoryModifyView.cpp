@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "../../controller/ScreenController.h"
 #include "../../controller/InventoryController.h"
+#include "../../controller/ScreenController.h"
 
 AdminInventoryModifyView::AdminInventoryModifyView()
 {
@@ -13,7 +13,6 @@ AdminInventoryModifyView::AdminInventoryModifyView()
     });
     setTitle("재고 증가/차감");
 }
-
 
 void AdminInventoryModifyView::run()
 {
@@ -68,7 +67,9 @@ void AdminInventoryModifyView::run()
         {
             setShowError(1);
             break;
-        } else {
+        }
+        else
+        {
             stock = inventoryController.getStock(productID);
         }
 

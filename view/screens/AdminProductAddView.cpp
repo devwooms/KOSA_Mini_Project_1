@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "../../controller/ScreenController.h"
 #include "../../controller/ProductController.h"
+#include "../../controller/ScreenController.h"
 
 AdminProductAddView::AdminProductAddView()
 {

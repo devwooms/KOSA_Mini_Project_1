@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "BaseController.h"
 #include "../model/Product.h"
+#include "BaseController.h"
 
 class ProductController : public BaseController
 {
@@ -16,7 +16,7 @@ class ProductController : public BaseController
     // 제품 목록 로드 (BaseController의 순수 가상 함수 구현)
     void loadData() override;
 
-protected:
+   protected:
     // BaseController의 순수 가상 함수들 구현
     std::string getFilePath() const override;
     std::vector<std::string> getHeaders() const override;
@@ -31,11 +31,11 @@ protected:
     Product* findProductByProductID(const std::string& productID);
 
     // 제품 추가
-    bool addProduct(const std::string& productID, const std::string& name, int price, 
+    bool addProduct(const std::string& productID, const std::string& name, int price,
                     const std::string& category, const std::string& description = "");
 
     // 제품 업데이트
-    bool updateProduct(const std::string& productID, const std::string& name, int price, 
+    bool updateProduct(const std::string& productID, const std::string& name, int price,
                        const std::string& category, const std::string& description = "");
 
     // 제품 삭제

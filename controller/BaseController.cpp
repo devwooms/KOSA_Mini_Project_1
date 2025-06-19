@@ -16,7 +16,4 @@ bool BaseController::initializeCsvFile()
     return true;
 }
 
-bool BaseController::checkFileExists() const
-{
-    return csvRepo->checkFile(getFilePath());
-} 
+bool BaseController::checkFileExists() const { return csvRepo->checkFile(getFilePath()); }

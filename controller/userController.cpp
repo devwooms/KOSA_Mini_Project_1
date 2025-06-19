@@ -9,10 +9,7 @@ UserController::UserController() : BaseController()
     loadData();
 }
 
-std::string UserController::getFilePath() const
-{
-    return CSV_PATH;
-}
+std::string UserController::getFilePath() const { return CSV_PATH; }
 
 std::vector<std::string> UserController::getHeaders() const
 {

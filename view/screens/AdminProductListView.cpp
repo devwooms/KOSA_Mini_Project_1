@@ -1,18 +1,15 @@
 #include "AdminProductListView.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <limits>
 
-#include "../../controller/ScreenController.h"
 #include "../../controller/ProductController.h"
+#include "../../controller/ScreenController.h"
 
 AdminProductListView::AdminProductListView()
 {
-    setErrorMessages({
-        " ",
-        "잘못된 입력입니다. 다시 선택하세요."
-    });
+    setErrorMessages({" ", "잘못된 입력입니다. 다시 선택하세요."});
     setTitle("제품 조회");
 }
 
@@ -91,8 +88,8 @@ void AdminProductListView::run()
                 for (const auto& product : products)
                 {
                     std::cout << std::left << std::setw(8) << product.getProductID() << "\t"
-                              << std::setw(15) << product.getName() << "\t"
-                              << std::setw(8) << (std::to_string(product.getPrice()) + "원") << "\t"
+                              << std::setw(15) << product.getName() << "\t" << std::setw(8)
+                              << (std::to_string(product.getPrice()) + "원") << "\t"
                               << std::setw(10) << product.getCategory() << "\n";
                 }
                 std::cout << "\n총 " << products.size() << "개 제품 정보\n";

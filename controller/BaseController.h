@@ -9,7 +9,7 @@
 
 class BaseController
 {
-protected:
+   protected:
     // CSV 리포지토리 - 모든 Controller가 공통으로 사용
     std::shared_ptr<CsvRepository> csvRepo;
 
@@ -17,17 +17,17 @@ protected:
     virtual std::string getFilePath() const = 0;
     virtual std::vector<std::string> getHeaders() const = 0;
     virtual void loadData() = 0;
-    
+
     // 공통 기능들
     bool initializeCsvFile();
     bool checkFileExists() const;
 
-public:
+   public:
     // 생성자
     BaseController();
-    
+
     // 가상 소멸자
     virtual ~BaseController() = default;
 };
 
-#endif  // BASE_CONTROLLER_H 
+#endif  // BASE_CONTROLLER_H

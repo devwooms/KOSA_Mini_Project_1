@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "BaseController.h"
 #include "../model/User.h"
+#include "BaseController.h"
 
 class UserController : public BaseController
 {
@@ -22,7 +22,7 @@ class UserController : public BaseController
     // 최대 사용자 ID 찾기
     int findMaxUserId() const;
 
-protected:
+   protected:
     // BaseController의 순수 가상 함수들 구현
     std::string getFilePath() const override;
     std::vector<std::string> getHeaders() const override;

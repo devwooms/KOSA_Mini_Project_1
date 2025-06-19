@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "../../controller/ScreenController.h"
 #include "../../controller/ProductController.h"
+#include "../../controller/ScreenController.h"
 
 AdminProductDeleteView::AdminProductDeleteView()
 {
@@ -13,7 +13,6 @@ AdminProductDeleteView::AdminProductDeleteView()
     });
     setTitle("제품 삭제");
 }
-
 
 void AdminProductDeleteView::run()
 {
@@ -39,7 +38,7 @@ void AdminProductDeleteView::run()
             break;
         }
 
-        Product *product = productController.findProductByProductID(productID);
+        Product* product = productController.findProductByProductID(productID);
         if (product == nullptr)
         {
             setShowError(1);
@@ -48,12 +47,12 @@ void AdminProductDeleteView::run()
 
         std::cout << "\n=== 삭제 할 제품 정보 ===\n";
         std::cout << std::left << std::setw(8) << "제품ID\t\t" << std::setw(15) << "이름\t"
-                    << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
+                  << std::setw(8) << "가격\t" << std::setw(10) << "카테고리\n";
         std::cout << "-----------------------------------------------------------\n";
-        std::cout << std::left << std::setw(8) << product->getProductID() << "\t"
-                  << std::setw(15) << product->getName() << "\t"
-                  << std::setw(8) << (std::to_string(product->getPrice()) + "원") << "\t"
-                  << std::setw(10) << product->getCategory() << "\n";
+        std::cout << std::left << std::setw(8) << product->getProductID() << "\t" << std::setw(15)
+                  << product->getName() << "\t" << std::setw(8)
+                  << (std::to_string(product->getPrice()) + "원") << "\t" << std::setw(10)
+                  << product->getCategory() << "\n";
 
         std::cout << "\n이 제품이 맞습니까? (0: 뒤로가기, 1: 삭제): ";
         std::string choice;

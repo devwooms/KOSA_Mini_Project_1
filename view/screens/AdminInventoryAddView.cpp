@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "../../controller/ScreenController.h"
 #include "../../controller/InventoryController.h"
+#include "../../controller/ScreenController.h"
 
 AdminInventoryAddView::AdminInventoryAddView()
 {
@@ -13,8 +13,6 @@ AdminInventoryAddView::AdminInventoryAddView()
     });
     setTitle("재고 입력");
 }
-
-
 
 void AdminInventoryAddView::run()
 {
@@ -33,7 +31,6 @@ void AdminInventoryAddView::run()
 
         // 타이틀 표시
         renderTitle(getTitle());
-
 
         std::cout << "제품ID: ";
         std::cin >> productID;
@@ -55,7 +52,6 @@ void AdminInventoryAddView::run()
         inventoryController.addInventory(productID, stock);
 
         std::cout << "재고 등록이 완료되었습니다." << std::endl;
-
 
         std::cout << "뒤로가려면 아무키나 누르세요...";
         std::cin.get();

@@ -9,10 +9,7 @@ ProductController::ProductController() : BaseController()
     loadData();
 }
 
-std::string ProductController::getFilePath() const
-{
-    return CSV_PATH;
-}
+std::string ProductController::getFilePath() const { return CSV_PATH; }
 
 std::vector<std::string> ProductController::getHeaders() const
 {
@@ -29,8 +26,8 @@ void ProductController::loadData()
         auto record = csvRepo->csvToVector(lines[i]);
         if (record.size() >= 6)
         {
-            Product product(std::stoi(record[0]), record[1], record[2], 
-                          std::stoi(record[3]), record[4], record[5]);
+            Product product(std::stoi(record[0]), record[1], record[2], std::stoi(record[3]),
+                            record[4], record[5]);
             products.push_back(product);
         }
     }
@@ -55,8 +52,8 @@ Product* ProductController::findProductByProductID(const std::string& productID)
     return nullptr;
 }
 
-bool ProductController::addProduct(const std::string& productID, const std::string& name, 
-                                   int price, const std::string& category, const std::string& description)
+bool ProductController::addProduct(const std::string& productID, const std::string& name, int price,
+                                   const std::string& category, const std::string& description)
 {
     // 이미 존재하는 제품 ID인지 확인
     if (findProductByProductID(productID) != nullptr)
@@ -66,15 +63,16 @@ bool ProductController::addProduct(const std::string& productID, const std::stri
 
     // 새로운 ID 생성 (간단히 현재 제품 수 + 1로 설정)
     int newId = static_cast<int>(products.size()) + 1;
-    
+
     // CSV 파일에 추가
-    std::vector<std::string> record = {std::to_string(newId), productID, name, 
-                                       std::to_string(price), category, description};
+    std::vector<std::string> record = {std::to_string(newId), productID, name,
+                                       std::to_string(price), category,  description};
     return csvRepo->appendFile(getFilePath(), csvRepo->vectorToCsv(record));
 }
 
-bool ProductController::updateProduct(const std::string& productID, const std::string& name, 
-                                       int price, const std::string& category, const std::string& description)
+bool ProductController::updateProduct(const std::string& productID, const std::string& name,
+                                      int price, const std::string& category,
+                                      const std::string& description)
 {
     auto lines = csvRepo->readFile(getFilePath());
     bool found = false;

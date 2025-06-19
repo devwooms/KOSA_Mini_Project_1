@@ -10,15 +10,9 @@ InventoryController::InventoryController() : BaseController()
     loadData();
 }
 
-std::string InventoryController::getFilePath() const
-{
-    return CSV_PATH;
-}
+std::string InventoryController::getFilePath() const { return CSV_PATH; }
 
-std::vector<std::string> InventoryController::getHeaders() const
-{
-    return {"ProductID", "Stock"};
-}
+std::vector<std::string> InventoryController::getHeaders() const { return {"ProductID", "Stock"}; }
 
 void InventoryController::loadData()
 {
