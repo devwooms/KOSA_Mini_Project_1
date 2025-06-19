@@ -6,7 +6,7 @@
 class CustomerSearchView : public BaseScreenView
 {
    private:
-    int getUserChoice();  // 사용자 입력 처리
+    std::string getUserChoice();  // 사용자 입력 처리
 
    public:
     CustomerSearchView();

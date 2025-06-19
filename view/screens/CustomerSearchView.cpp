@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../../controller/InventoryController.h"
+#include "../../controller/ProductController.h"
 #include "../../controller/ScreenController.h"
 
 CustomerSearchView::CustomerSearchView()
@@ -12,10 +13,10 @@ CustomerSearchView::CustomerSearchView()
     setTitle("제품 검색");
 }
 
-int CustomerSearchView::getUserChoice()
+std::string CustomerSearchView::getUserChoice()
 {
     std::string choice;
-    std::cout << "검색하기 (0: 뒤로가기, 1: 전체보기): ";
+    std::cout << "검색하기 (0: 뒤로가기, 1: 전체보기, 제품명 검색): ";
 
     std::cin >> choice;
     // 입력 버퍼 비우기
@@ -24,16 +25,15 @@ int CustomerSearchView::getUserChoice()
     // 유효한 입력인지 확인
     if (choice == "0")
     {
-        return 0;
+        return "0";
     }
     else if (choice == "1")
     {
-        return 1;
+        return "1";
     }
     else
     {
-        // 잘못된 입력의 경우 -1 반환
-        return -1;
+        return choice;
     }
 }
 
@@ -51,22 +51,15 @@ void CustomerSearchView::run()
         renderTitle(getTitle());
 
         // 사용자 입력 받기
-        int choice = getUserChoice();
+        std::string choice = getUserChoice();
 
-        // 선택 처리
-        if (choice == -1)
-        {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
-        }
-        else if (choice == 0)
+        if (choice == "0")
         {
             // 뒤로가기 - 스택에서 제거하여 이전 화면으로
             goBack();
             break;
         }
-        else if (choice == 1)
+        else if (choice == "1")
         {
             // 전체 인벤토리 목록 표시
             InventoryController inventoryController;
@@ -96,9 +89,45 @@ void CustomerSearchView::run()
         }
         else
         {
-            // 잘못된 입력 - 에러 플래그 설정하고 다시 루프
-            setShowError(1);
-            continue;
+            InventoryController inventoryController;
+            ProductController productController;
+
+            // ProductController의 검색 메서드 사용
+            std::vector<Product> matchedProducts = productController.searchProductsByName(choice);
+
+            // 검색 결과 표시
+            std::cout << "\n=== 검색 결과: \"" << choice << "\" ===\n";
+
+            if (matchedProducts.empty())
+            {
+                std::cout << "검색된 제품이 없습니다.\n";
+            }
+            else
+            {
+                std::cout << std::left << std::setw(10) << "제품ID" << std::setw(20) << "제품명"
+                          << std::setw(10) << "가격" << std::setw(15) << "카테고리" << std::setw(10)
+                          << "재고수량" << "\n";
+                std::cout
+                    << "----------------------------------------------------------------------\n";
+
+                for (const auto& product : matchedProducts)
+                {
+                    // 해당 제품의 재고 정보 가져오기
+                    Inventory* inventory =
+                        inventoryController.findInventoryByProductID(product.getProductID());
+                    std::string stockInfo =
+                        inventory ? (std::to_string(inventory->getStock()) + "개") : "재고없음";
+
+                    std::cout << std::left << std::setw(10) << product.getProductID()
+                              << std::setw(20) << product.getName() << std::setw(10)
+                              << (std::to_string(product.getPrice()) + "원") << std::setw(15)
+                              << product.getCategory() << std::setw(10) << stockInfo << "\n";
+                }
+                std::cout << "\n총 " << matchedProducts.size() << "개 제품이 검색되었습니다.\n";
+            }
+
+            std::cout << "\n계속하려면 Enter를 누르세요...";
+            std::cin.get();
         }
     }
 }

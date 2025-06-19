@@ -1,5 +1,7 @@
 #include "ProductController.h"
 
+#include <algorithm>
+
 const std::string ProductController::CSV_PATH = "../data/product.csv";
 
 ProductController::ProductController() : BaseController()
@@ -50,6 +52,32 @@ Product* ProductController::findProductByProductID(const std::string& productID)
         }
     }
     return nullptr;
+}
+
+std::vector<Product> ProductController::searchProductsByName(const std::string& keyword)
+{
+    loadData();  // 최신 데이터 로드
+    std::vector<Product> matchedProducts;
+
+    for (const auto& product : products)
+    {
+        // 제품명에 검색어가 포함되어 있는지 확인 (대소문자 구분 없이)
+        std::string productName = product.getName();
+        std::string lowerKeyword = keyword;
+        std::string lowerProductName = productName;
+
+        // 소문자로 변환
+        std::transform(lowerKeyword.begin(), lowerKeyword.end(), lowerKeyword.begin(), ::tolower);
+        std::transform(lowerProductName.begin(), lowerProductName.end(), lowerProductName.begin(),
+                       ::tolower);
+
+        if (lowerProductName.find(lowerKeyword) != std::string::npos)
+        {
+            matchedProducts.push_back(product);
+        }
+    }
+
+    return matchedProducts;
 }
 
 bool ProductController::addProduct(const std::string& productID, const std::string& name, int price,

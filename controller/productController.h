@@ -30,6 +30,9 @@ class ProductController : public BaseController
     // 특정 제품 ID로 제품 조회
     Product* findProductByProductID(const std::string& productID);
 
+    // 제품명으로 검색 (부분 문자열 매칭, 대소문자 구분 없음)
+    std::vector<Product> searchProductsByName(const std::string& keyword);
+
     // 제품 추가
     bool addProduct(const std::string& productID, const std::string& name, int price,
                     const std::string& category, const std::string& description = "");
