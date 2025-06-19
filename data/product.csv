@@ -8,3 +8,4 @@ ID,ProductID,Name,Price,Category,Description
 7,P007,샌드위치,3500,식품,신선한 샌드위치
 8,P008,물,800,음료,깨끗한 생수
 9,P009,초콜릿,3000,스낵,고급 초콜릿 
+10,P010,test,101010,test,test
